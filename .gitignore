@@ -1,0 +1,31 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Artefactos de desarrollo: quedan en disco, fuera del repo.
+# shots/ son capturas de referencia de junio; .shot*.mjs, scripts sueltos de
+# depuración; el PNG con nombre destrozado salió de un screenshot accidental.
+shots/
+.shot*.mjs
+UsersUsuarioAppDataLocalTemp*.png
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

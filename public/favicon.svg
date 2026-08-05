@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>Jonathan Medrano</title>
+  <!--
+    A "J" drawn in the same 5x5 wool-block font Steve builds the hero name with
+    (see WoolName.tsx), in the same amber, on the professional mode's ink tile.
+    One mark for both worlds.
+
+    Blocks rather than a <text> element on purpose: a favicon can't depend on a
+    typeface being present on the viewer's machine, and at a 16px tab icon a
+    5-block glyph stays chunky and legible where a serif letter turns to mush.
+  -->
+  <rect width="64" height="64" rx="12" fill="#1c1917" />
+  <g fill="#f0a52e">
+    <!-- row 0: ..### -->
+    <rect x="27" y="7" width="10" height="10" />
+    <rect x="37" y="7" width="10" height="10" />
+    <rect x="47" y="7" width="10" height="10" />
+    <!-- row 1: ...#. -->
+    <rect x="37" y="17" width="10" height="10" />
+    <!-- row 2: ...#. -->
+    <rect x="37" y="27" width="10" height="10" />
+    <!-- row 3: #..#. -->
+    <rect x="7" y="37" width="10" height="10" />
+    <rect x="37" y="37" width="10" height="10" />
+    <!-- row 4: .##.. -->
+    <rect x="17" y="47" width="10" height="10" />
+    <rect x="27" y="47" width="10" height="10" />
+  </g>
+</svg>

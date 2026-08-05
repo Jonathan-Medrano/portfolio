@@ -1,0 +1,120 @@
+<!doctype html>
+<!--
+  Source for public/og-image.png — the preview card that shows up when the
+  portfolio link is pasted into LinkedIn, WhatsApp or Slack.
+
+  Rendered to PNG by scripts/gen-og.mjs at exactly 1200x630 (the size every
+  platform crops to). Edit this file, re-run `npm run og`, commit the PNG.
+-->
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      @font-face {
+        font-family: "Playfair";
+        src: url("../node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2")
+          format("woff2");
+        font-weight: 400 900;
+      }
+      @font-face {
+        font-family: "NotoS";
+        src: url("../node_modules/@fontsource-variable/noto-sans/files/noto-sans-latin-wght-normal.woff2")
+          format("woff2");
+        font-weight: 100 900;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 28px;
+        padding: 0 88px;
+        background: #fafaf9;
+        color: #1c1917;
+        font-family: "NotoS", system-ui, sans-serif;
+      }
+
+      .role {
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #78716c;
+      }
+
+      h1 {
+        font-family: "Playfair", Georgia, serif;
+        font-size: 112px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.015em;
+      }
+
+      .tagline {
+        font-size: 34px;
+        line-height: 1.35;
+        color: #57534e;
+        max-width: 900px;
+      }
+
+      .stack {
+        display: flex;
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .chip {
+        border: 2px solid #d6d3d1;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 24px;
+        color: #44403c;
+      }
+
+      /* Wool block accent: the one nod to the Minecraft half, bottom-right. */
+      .wool {
+        position: absolute;
+        right: 88px;
+        bottom: 76px;
+        display: grid;
+        grid-template-columns: repeat(5, 26px);
+        grid-auto-rows: 26px;
+      }
+      .wool i {
+        background: #f0a52e;
+        box-shadow:
+          inset 0 3px 0 rgba(255, 255, 255, 0.32),
+          inset 0 -5px 0 rgba(0, 0, 0, 0.2),
+          inset 0 0 0 2px rgba(0, 0, 0, 0.28);
+      }
+    </style>
+  </head>
+  <body>
+    <p class="role">Desarrollador Full Stack</p>
+    <h1>Jonathan Medrano</h1>
+    <p class="tagline">
+      Construyo productos web de punta a punta: del esquema de la base al pixel
+      del front.
+    </p>
+    <div class="stack">
+      <span class="chip">React</span>
+      <span class="chip">TypeScript</span>
+      <span class="chip">Node.js</span>
+      <span class="chip">.NET</span>
+      <span class="chip">PostgreSQL</span>
+    </div>
+
+    <!-- "J" in the 5x5 wool font, same glyph as the favicon. -->
+    <div class="wool">
+      <i style="grid-area: 1/3"></i><i style="grid-area: 1/4"></i><i style="grid-area: 1/5"></i>
+      <i style="grid-area: 2/4"></i>
+      <i style="grid-area: 3/4"></i>
+      <i style="grid-area: 4/1"></i><i style="grid-area: 4/4"></i>
+      <i style="grid-area: 5/2"></i><i style="grid-area: 5/3"></i>
+    </div>
+  </body>
+</html>
