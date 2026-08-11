@@ -82,10 +82,11 @@ export const projects: Project[] = [
     description:
       "Una publicación que dice «40% OFF» no dice nada: el precio pudo haber subido antes para que el descuento parezca más grande. Sin la serie histórica no hay forma de saberlo, y esa serie hay que construirla día a día porque nadie la publica.",
     highlights: [
+      "La alerta se dispara solo ante un mínimo histórico real: compara el precio nuevo contra toda la serie acumulada, no contra el de ayer, y exige un mínimo de historia antes de avisar para no gritar con dos datos.",
       "El scraper lee el precio real del catálogo, no el primero que aparece: Mercado Libre muestra varios en la misma página, y los centavos vienen en un nodo aparte del DOM.",
       "Los links de Mercado Libre tienen cuatro formatos que apuntan al mismo producto; sin normalizarlos, la serie de precios se parte en varias.",
-      "El bot de Telegram es la interfaz, no un extra: nadie abre una web para chequear un precio todos los días, pero un mensaje sí lo lee.",
-      "Extensión de navegador que inyecta el historial en la propia página de Mercado Libre, más publicación automatizada de las ofertas.",
+      "Dos canales de aviso: broadcast al canal público de Telegram, y mensaje directo a cada usuario según el precio objetivo que haya fijado. El bot solo envía, nunca hace polling, para no competir por getUpdates con otro bot que comparte el mismo token.",
+      "Cada mínimo histórico se publica también en Twitter de forma automática, replicando el aviso del canal.",
     ],
     stack: [
       "Node.js",
@@ -94,6 +95,7 @@ export const projects: Project[] = [
       "PostgreSQL",
       "Playwright",
       "Telegram Bot API",
+      "Twitter",
       "Mercado Pago",
       "Fly.io",
     ],
