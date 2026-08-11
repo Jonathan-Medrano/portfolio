@@ -3,9 +3,11 @@ import type { LabProject, Project } from "./types";
 // Order matters: best first. `highlights` is the part that gets you the
 // interview — each bullet is a technical decision you can defend, not a feature.
 //
-// Only four make it here. A fifth card doesn't add 20% more evidence: it takes
-// attention away from VIKUPASS, which is the only one with a paying client and
-// is worth more than the rest combined. Everything else lives in `lab` below.
+// Four, and the number is the point. A fifth card doesn't add 20% more
+// evidence: it takes attention away from VIKUPASS, the only one with a paying
+// client, which is worth more than the rest combined. Each of the four also has
+// to prove something the other three don't — otherwise it's repetition wearing
+// a different logo.
 //
 // Hard rule: no link that does not open. A dead link actively proves the claim
 // isn't true, which is worse than showing no link at all.
@@ -41,21 +43,68 @@ export const projects: Project[] = [
     links: [{ label: "Ver en vivo", url: "https://vikupass.com" }],
   },
   {
-    id: "motor-video-ia",
-    title: "Motor de video con IA",
+    id: "clip-editor",
+    title: "ClipEditor",
     summary:
-      "Genera y publica lyric-videos en YouTube sin intervención humana.",
+      "Producción de video automatizada: guion, voz, animación, render y publicación.",
     description:
-      "Pipeline propio que toma una canción y devuelve el video publicado: genera el arte con modelos de difusión, alinea la letra con el audio y renderiza el video final. Alimenta un canal real de YouTube que sigue publicando.",
+      "Empezó como un editor de subtítulos para Shorts y terminó siendo un pipeline completo. Incluye un motor de escena propio —mundo, cámara, escenario, reparto y ciclo de caminata— que reemplazó a Remotion, y un piloto automático que produce, publica y lee la analítica para decidir el próximo video.",
     highlights: [
-      "Forced alignment entre letra y audio para que cada línea aparezca en su tiempo exacto, en vez de subtítulos calculados a ojo.",
-      "Render con filtergraphs de FFmpeg: ecualizador de barras, scroll de letra y color de acento extraído de la propia imagen generada.",
-      "Publicación vía YouTube Data API v3 con un job programado e idempotente: si se corre dos veces, no sube el video dos veces.",
+      "El trabajo pesado nunca está en el request: Fastify encola en BullMQ sobre Redis y los workers de Python lo consumen aparte. Renderizar tarda minutos; si el usuario espera, la conexión se cae y no hay reintento.",
+      "Once estilos de subtítulo sincronizado —karaoke, neón, glitch, máquina de escribir— cada uno como proceso aislado: un cambio en el timing de uno no puede romper a los otros.",
+      "La escena se valida antes de renderizar: si un personaje quedó fuera de cuadro, falla ahí y no después de gastar minutos de CPU.",
+      "Los proveedores externos (ElevenLabs, Gemini, fal.ai, Pexels) entran por adaptadores, así cambiar de proveedor de voz no obliga a tocar el pipeline.",
     ],
-    stack: ["Node.js", "Python", "PyTorch", "FFmpeg", "YouTube Data API"],
-    status: "live",
-    kind: "tool",
-    links: [],
+    stack: [
+      "Node.js",
+      "Fastify",
+      "BullMQ",
+      "Redis",
+      "Python",
+      "FFmpeg",
+      "React",
+      "Cloudflare R2",
+    ],
+    status: "wip",
+    kind: "product",
+    links: [
+      {
+        label: "Ver código",
+        url: "https://github.com/Jonathan-Medrano/clip-editor",
+      },
+    ],
+  },
+  {
+    id: "bajo-el-precio",
+    title: "Bajó el Precio",
+    summary:
+      "Historial de precios de Mercado Libre: distingue una baja real de un descuento inflado.",
+    description:
+      "Una publicación que dice «40% OFF» no dice nada: el precio pudo haber subido antes para que el descuento parezca más grande. Sin la serie histórica no hay forma de saberlo, y esa serie hay que construirla día a día porque nadie la publica.",
+    highlights: [
+      "El scraper lee el precio real del catálogo, no el primero que aparece: Mercado Libre muestra varios en la misma página, y los centavos vienen en un nodo aparte del DOM.",
+      "Los links de Mercado Libre tienen cuatro formatos que apuntan al mismo producto; sin normalizarlos, la serie de precios se parte en varias.",
+      "El bot de Telegram es la interfaz, no un extra: nadie abre una web para chequear un precio todos los días, pero un mensaje sí lo lee.",
+      "Extensión de navegador que inyecta el historial en la propia página de Mercado Libre, más publicación automatizada de las ofertas.",
+    ],
+    stack: [
+      "Node.js",
+      "Express",
+      "Prisma",
+      "PostgreSQL",
+      "Playwright",
+      "Telegram Bot API",
+      "Mercado Pago",
+      "Fly.io",
+    ],
+    status: "archived",
+    kind: "product",
+    links: [
+      {
+        label: "Ver código",
+        url: "https://github.com/Jonathan-Medrano/bajo-el-precio",
+      },
+    ],
   },
   {
     id: "mecanicos",
@@ -85,119 +134,46 @@ export const projects: Project[] = [
     kind: "product",
     links: [],
   },
-  {
-    id: "clip-editor",
-    title: "ClipEditor",
-    summary:
-      "Producción de video automatizada: guion, voz, animación, render y publicación.",
-    description:
-      "Empezó como un editor de subtítulos para Shorts y terminó siendo un pipeline completo. Incluye un motor de escena propio —mundo, cámara, escenario, reparto y ciclo de caminata— que reemplazó a Remotion, y un piloto automático que produce, publica y lee la analítica para decidir el próximo video.",
-    highlights: [
-      "El trabajo pesado nunca está en el request: Fastify encola en BullMQ sobre Redis y los workers de Python lo consumen aparte. Renderizar tarda minutos; si el usuario espera, la conexión se cae y no hay reintento.",
-      "Once estilos de subtítulo sincronizado —karaoke, neón, glitch, máquina de escribir— cada uno como proceso aislado: un cambio en el timing de uno no puede romper a los otros.",
-      "La escena se valida antes de renderizar: si un personaje quedó fuera de cuadro, falla ahí y no después de gastar minutos de CPU.",
-      "Los proveedores externos (ElevenLabs, Gemini, fal.ai, Pexels) entran por adaptadores, así cambiar de proveedor de voz no obliga a tocar el pipeline.",
-    ],
-    stack: [
-      "Node.js",
-      "Fastify",
-      "BullMQ",
-      "Redis",
-      "Python",
-      "FFmpeg",
-      "React",
-      "Cloudflare R2",
-    ],
-    status: "wip",
-    kind: "product",
-    links: [
-      { label: "Ver código", url: "https://github.com/Jonathan-Medrano/clip-editor" },
-    ],
-  },
-  {
-    id: "bajo-el-precio",
-    title: "Bajó el Precio",
-    summary:
-      "Historial de precios de Mercado Libre: distingue una baja real de un descuento inflado.",
-    description:
-      "Una publicación que dice «40% OFF» no dice nada: el precio pudo haber subido antes para que el descuento parezca más grande. Sin la serie histórica no hay forma de saberlo, y esa serie hay que construirla día a día porque nadie la publica.",
-    highlights: [
-      "El scraper lee el precio real del catálogo, no el primero que aparece: Mercado Libre muestra varios en la misma página, y los centavos vienen en un nodo aparte del DOM.",
-      "Los links de Mercado Libre tienen cuatro formatos que apuntan al mismo producto; sin normalizarlos, la serie de precios se parte en varias.",
-      "El bot de Telegram es la interfaz, no un extra: nadie abre una web para chequear un precio todos los días, pero un mensaje sí lo lee.",
-      "Extensión de navegador que inyecta el historial en la propia página de Mercado Libre, más publicación automatizada de las ofertas.",
-    ],
-    stack: [
-      "Node.js",
-      "Express",
-      "Prisma",
-      "PostgreSQL",
-      "Playwright",
-      "Telegram Bot API",
-      "Mercado Pago",
-      "Fly.io",
-    ],
-    status: "archived",
-    kind: "product",
-    links: [
-      { label: "Ver código", url: "https://github.com/Jonathan-Medrano/bajo-el-precio" },
-    ],
-  },
-  {
-    id: "quant-research",
-    title: "Investigación de trading cuantitativo",
-    summary:
-      "Backtesting sistemático de hipótesis de mercado. Cerrado a propósito.",
-    description:
-      "Motor de backtesting para falsificar estrategias de trading contra datos históricos. Probé ocho hipótesis candidatas y ninguna sostuvo un edge neto después de costos, así que cerré el proyecto en vez de seguir ajustando parámetros hasta que los números dieran.",
-    highlights: [
-      "Validación contra datos out-of-sample: una estrategia que solo funciona sobre los datos con los que se la construyó no está midiendo nada.",
-      "Costos de transacción y slippage dentro del modelo desde el principio — sin eso, casi cualquier estrategia parece rentable.",
-      "Ocho hipótesis falsificadas y proyecto cerrado con la conclusión escrita. Saber cuándo matar algo propio también es una decisión de ingeniería.",
-    ],
-    stack: ["Python", "pandas", "scikit-learn", "SQLite"],
-    status: "archived",
-    kind: "tool",
-    links: [
-      { label: "Ver código", url: "https://github.com/Jonathan-Medrano/bot_trading" },
-    ],
-  },
 ];
 
-// The lab. One line each, no status badges, no links.
+// The lab. One line each, no status badges.
 //
 // These are experiments, not products, and the framing matters: an experiment
 // that ended isn't an abandoned commitment. Shown as full cards with `wip`
 // badges they'd read as a graveyard; shown as a compact list they do what
 // they're actually good for — showing range across very different domains.
+//
+// Nothing here is a module of something already listed above. Splitting one
+// project into three entries inflates the count and the reader notices.
 export const lab: LabProject[] = [
+  {
+    id: "quant-research",
+    title: "Investigación de trading cuantitativo",
+    summary:
+      "Backtester event-driven para falsificar estrategias de mercado. Probé ocho hipótesis contra datos out-of-sample, ninguna sostuvo un edge neto después de costos, y cerré el proyecto en vez de seguir ajustando parámetros hasta que los números dieran.",
+    stack: ["Python", "pandas", "scikit-learn"],
+    url: "https://github.com/Jonathan-Medrano/bot_trading",
+  },
+  {
+    id: "motor-video-ia",
+    title: "Motor de video con IA",
+    summary:
+      "Genera y publica lyric-videos en un canal real de YouTube sin intervención: forced alignment entre letra y audio para que cada línea caiga en su tiempo exacto, render con filtergraphs de FFmpeg y publicación programada e idempotente.",
+    stack: ["Node.js", "Python", "PyTorch", "FFmpeg", "YouTube Data API"],
+  },
   {
     id: "motor-assets",
     title: "Motor de assets para juegos",
     summary:
-      "Generación de personajes y fondos con modelos de difusión, con un pipeline que mantiene el estilo consistente entre imágenes.",
-    stack: ["Python", "Difusión", "Node.js"],
-  },
-  {
-    id: "mensajeria",
-    title: "Integraciones de mensajería",
-    summary:
-      "Respuestas automáticas sobre WhatsApp y Telegram: webhooks, manejo de estado por conversación y reintentos ante fallos de entrega.",
-    stack: ["Node.js", "Evolution API", "Telegram Bot API"],
-  },
-  {
-    id: "motor-reels",
-    title: "Motor de reels",
-    summary:
-      "Generación y publicación automatizada de video vertical, con las APIs de IA de terceros (voz y texto) detrás de una capa propia para poder cambiar de proveedor.",
-    stack: ["Node.js", "FFmpeg", "ElevenLabs"],
+      "Pipeline de generación de personajes y fondos con IA para juegos idle y tower defense, con contratos versionados para que el estilo se mantenga consistente entre imágenes.",
+    stack: ["Node.js", "Blender", "Modelos de difusión"],
   },
   {
     id: "monedita",
     title: "Monedita",
     summary:
       "Sistema de finanzas personales operado desde WhatsApp: registro de movimientos, carteras y seguimiento de la canasta argentina.",
-    stack: ["TypeScript", "Node.js", "PostgreSQL"],
+    stack: ["TypeScript", "Node.js", "PostgreSQL", "Turborepo"],
   },
   {
     id: "gestion-financiera",

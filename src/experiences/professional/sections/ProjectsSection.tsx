@@ -110,7 +110,21 @@ export default function ProjectsSection() {
               key={item.id}
               className="flex flex-col gap-2 border-l-2 border-border pl-4"
             >
-              <h4 className="font-heading font-semibold">{item.title}</h4>
+              <h4 className="font-heading font-semibold">
+                {item.url ? (
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 hover:text-foreground/70"
+                  >
+                    {item.title}
+                    <ArrowUpRight className="size-3.5" aria-hidden />
+                  </a>
+                ) : (
+                  item.title
+                )}
+              </h4>
               <p className="text-sm leading-relaxed text-pretty text-muted-foreground">
                 {item.summary}
               </p>

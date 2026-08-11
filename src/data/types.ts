@@ -64,6 +64,8 @@ export interface LabProject {
   /** What it does and, ideally, what it taught. One sentence. */
   summary: string;
   stack: string[];
+  /** Only when the code is public. A lab entry does not need a link to earn its place. */
+  url?: string;
 }
 
 export interface Experience {
