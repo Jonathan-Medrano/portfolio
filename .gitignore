@@ -29,3 +29,5 @@ UsersUsuarioAppDataLocalTemp*.png
 *.njsproj
 *.sln
 *.sw?
+
+.vercel

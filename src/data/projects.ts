@@ -86,6 +86,64 @@ export const projects: Project[] = [
     links: [],
   },
   {
+    id: "clip-editor",
+    title: "ClipEditor",
+    summary:
+      "Producción de video automatizada: guion, voz, animación, render y publicación.",
+    description:
+      "Empezó como un editor de subtítulos para Shorts y terminó siendo un pipeline completo. Incluye un motor de escena propio —mundo, cámara, escenario, reparto y ciclo de caminata— que reemplazó a Remotion, y un piloto automático que produce, publica y lee la analítica para decidir el próximo video.",
+    highlights: [
+      "El trabajo pesado nunca está en el request: Fastify encola en BullMQ sobre Redis y los workers de Python lo consumen aparte. Renderizar tarda minutos; si el usuario espera, la conexión se cae y no hay reintento.",
+      "Once estilos de subtítulo sincronizado —karaoke, neón, glitch, máquina de escribir— cada uno como proceso aislado: un cambio en el timing de uno no puede romper a los otros.",
+      "La escena se valida antes de renderizar: si un personaje quedó fuera de cuadro, falla ahí y no después de gastar minutos de CPU.",
+      "Los proveedores externos (ElevenLabs, Gemini, fal.ai, Pexels) entran por adaptadores, así cambiar de proveedor de voz no obliga a tocar el pipeline.",
+    ],
+    stack: [
+      "Node.js",
+      "Fastify",
+      "BullMQ",
+      "Redis",
+      "Python",
+      "FFmpeg",
+      "React",
+      "Cloudflare R2",
+    ],
+    status: "wip",
+    kind: "product",
+    links: [
+      { label: "Ver código", url: "https://github.com/Jonathan-Medrano/clip-editor" },
+    ],
+  },
+  {
+    id: "bajo-el-precio",
+    title: "Bajó el Precio",
+    summary:
+      "Historial de precios de Mercado Libre: distingue una baja real de un descuento inflado.",
+    description:
+      "Una publicación que dice «40% OFF» no dice nada: el precio pudo haber subido antes para que el descuento parezca más grande. Sin la serie histórica no hay forma de saberlo, y esa serie hay que construirla día a día porque nadie la publica.",
+    highlights: [
+      "El scraper lee el precio real del catálogo, no el primero que aparece: Mercado Libre muestra varios en la misma página, y los centavos vienen en un nodo aparte del DOM.",
+      "Los links de Mercado Libre tienen cuatro formatos que apuntan al mismo producto; sin normalizarlos, la serie de precios se parte en varias.",
+      "El bot de Telegram es la interfaz, no un extra: nadie abre una web para chequear un precio todos los días, pero un mensaje sí lo lee.",
+      "Extensión de navegador que inyecta el historial en la propia página de Mercado Libre, más publicación automatizada de las ofertas.",
+    ],
+    stack: [
+      "Node.js",
+      "Express",
+      "Prisma",
+      "PostgreSQL",
+      "Playwright",
+      "Telegram Bot API",
+      "Mercado Pago",
+      "Fly.io",
+    ],
+    status: "archived",
+    kind: "product",
+    links: [
+      { label: "Ver código", url: "https://github.com/Jonathan-Medrano/bajo-el-precio" },
+    ],
+  },
+  {
     id: "quant-research",
     title: "Investigación de trading cuantitativo",
     summary:
@@ -100,7 +158,9 @@ export const projects: Project[] = [
     stack: ["Python", "pandas", "scikit-learn", "SQLite"],
     status: "archived",
     kind: "tool",
-    links: [],
+    links: [
+      { label: "Ver código", url: "https://github.com/Jonathan-Medrano/bot_trading" },
+    ],
   },
 ];
 
@@ -111,20 +171,6 @@ export const projects: Project[] = [
 // badges they'd read as a graveyard; shown as a compact list they do what
 // they're actually good for — showing range across very different domains.
 export const lab: LabProject[] = [
-  {
-    id: "clipeditor",
-    title: "ClipEditor",
-    summary:
-      "Editor de video con voz por IA y subtítulos palabra por palabra. Acá aprendí a sacar el trabajo pesado del request: colas y workers en vez de hacer esperar al usuario.",
-    stack: ["React", "Fastify", "BullMQ", "Redis", "Python", "FFmpeg"],
-  },
-  {
-    id: "bajo-el-precio",
-    title: "Bajó el Precio",
-    summary:
-      "Scraper de precios de Mercado Libre que distingue una baja real de un descuento inflado sobre precio remarcado. Sin serie temporal persistida, esa diferencia no se puede calcular.",
-    stack: ["Node.js", "TypeScript", "Scraping", "Fly.io"],
-  },
   {
     id: "motor-assets",
     title: "Motor de assets para juegos",
