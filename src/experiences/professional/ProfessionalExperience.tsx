@@ -10,8 +10,7 @@ import { profile } from "@/data";
 //
 // Why one page instead of four routes: a recruiter scans, they don't browse.
 // Every click is a place to lose them, and the content here fits comfortably
-// in one read. It also mirrors the Minecraft experience, which is already a
-// single scroll — same data, same shape, different world.
+// in one read.
 export default function ProfessionalExperience() {
   return (
     <div className="min-h-dvh bg-background text-foreground">

@@ -1,6 +1,12 @@
 // Single source of truth for portfolio content.
-// These types are presentation-agnostic: both the professional and the
-// Minecraft experiences consume the same data and decide how to render it.
+// These types are presentation-agnostic: the data says what is true, the
+// sections decide how to render it.
+//
+// Projects come in two shapes on purpose. A reader gives the page under a
+// minute, so showing ten equal cards means none of them gets read — and a wall
+// of half-finished side projects reads as "starts things, doesn't finish them".
+// `Project` is the handful that carry the argument; `LabProject` is the rest,
+// framed as finished experiments rather than abandoned products.
 
 export type SkillCategory = "language" | "frontend" | "backend" | "tooling";
 
@@ -27,7 +33,7 @@ export interface ProjectLink {
 export interface Project {
   id: string;
   title: string;
-  /** One line. Shown on cards and on the Minecraft cave signs. */
+  /** One line. Shown on the card header. */
   summary: string;
   /** A paragraph of context: what problem it solves and for whom. */
   description: string;
@@ -45,6 +51,19 @@ export interface Project {
   featured?: boolean;
   /** Path under /public or imported asset url. */
   image?: string;
+}
+
+/**
+ * A one-line entry for the lab section: something built to understand how it
+ * works, not to ship. No status badge on purpose — an experiment doesn't owe
+ * anyone a roadmap, and `wip` on six cards is what makes the set read badly.
+ */
+export interface LabProject {
+  id: string;
+  title: string;
+  /** What it does and, ideally, what it taught. One sentence. */
+  summary: string;
+  stack: string[];
 }
 
 export interface Experience {
@@ -78,8 +97,6 @@ export interface Social {
 
 export interface Profile {
   name: string;
-  /** Short form for where space is tight (the Minecraft wool build). */
-  shortName: string;
   role: string;
   /** One-liner for the hero. */
   tagline: string;

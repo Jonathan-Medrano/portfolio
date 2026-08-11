@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
-import { projects, type Project } from "@/data";
+import { lab, projects, type Project } from "@/data";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Section from "../Section";
@@ -92,6 +92,41 @@ export default function ProjectsSection() {
         {projects.map((project, i) => (
           <ProjectCard key={project.id} project={project} index={i} />
         ))}
+      </div>
+
+      {/* The lab. Deliberately quieter than the cards above: same page, less
+          weight. The heading does the framing — these are experiments that
+          ended, not products that stalled. */}
+      <div className="mt-14 border-t border-border pt-10">
+        <h3 className="font-heading text-xl font-semibold">Laboratorio</h3>
+        <p className="mt-2 max-w-2xl text-pretty text-muted-foreground">
+          Cosas que construí para entender cómo funcionan por dentro. No son
+          productos: son experimentos terminados, y cada uno dejó algo.
+        </p>
+
+        <ul className="mt-8 flex flex-col gap-6">
+          {lab.map((item) => (
+            <li
+              key={item.id}
+              className="flex flex-col gap-2 border-l-2 border-border pl-4"
+            >
+              <h4 className="font-heading font-semibold">{item.title}</h4>
+              <p className="text-sm leading-relaxed text-pretty text-muted-foreground">
+                {item.summary}
+              </p>
+              <ul className="flex flex-wrap gap-1.5">
+                {item.stack.map((tech) => (
+                  <li
+                    key={tech}
+                    className="rounded border border-border px-2 py-0.5 text-xs text-muted-foreground"
+                  >
+                    {tech}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
       </div>
     </Section>
   );

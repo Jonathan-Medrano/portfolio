@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import { profile } from "@/data";
-import ModeToggle from "@/components/ModeToggle";
 import { useActiveSection } from "./useActiveSection";
 
 const links = [
@@ -25,28 +24,25 @@ export default function ProNavbar() {
           {profile.name}
         </a>
 
-        <div className="flex items-center gap-6">
-          {/* Hidden below md: at 390px these four links do not fit next to the
-              name and the toggle. The page is one scroll — the links are a
-              shortcut, not the only way to reach a section. */}
-          <ul className="hidden items-center gap-6 md:flex">
-            {links.map((link) => (
-              <li key={link.id}>
-                <a
-                  href={`#${link.id}`}
-                  aria-current={active === link.id ? "true" : undefined}
-                  className={cn(
-                    "text-sm text-muted-foreground transition-colors hover:text-foreground",
-                    active === link.id && "font-medium text-foreground",
-                  )}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <ModeToggle />
-        </div>
+        {/* Hidden below md: at 390px these four links do not fit next to the
+            name. The page is one scroll — the links are a shortcut, not the
+            only way to reach a section. */}
+        <ul className="hidden items-center gap-6 md:flex">
+          {links.map((link) => (
+            <li key={link.id}>
+              <a
+                href={`#${link.id}`}
+                aria-current={active === link.id ? "true" : undefined}
+                className={cn(
+                  "text-sm text-muted-foreground transition-colors hover:text-foreground",
+                  active === link.id && "font-medium text-foreground",
+                )}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
       </nav>
     </header>
   );
