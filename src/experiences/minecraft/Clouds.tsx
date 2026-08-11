@@ -1,6 +1,6 @@
-import { motion } from "motion/react";
+import type { CSSProperties } from "react";
 import PixelArt from "./PixelArt";
-import { useActive } from "./active";
+import { useViewport } from "./worldScale";
 
 // Minecraft clouds: flat white slabs with hard edges, a flat bottom and a faint
 // shaded underside — not round puffs. W = white top, S = shaded bottom face.
@@ -20,6 +20,8 @@ const shapes = [
 
 // left is in vw within one copy (0–100); the field is duplicated and scrolled as
 // a seamless marquee so every cloud drifts at the same speed with no popping.
+// Ordered so the first few still read as a full sky on their own — a phone shows
+// a prefix of this list, because eight clouds on a 390px sky is overcast.
 const clouds = [
   { shape: 0, top: "6%", left: 8, pixel: 13 },
   { shape: 2, top: "19%", left: 40, pixel: 10 },
@@ -31,18 +33,22 @@ const clouds = [
   { shape: 1, top: "25%", left: 6, pixel: 9 },
 ];
 
+const COUNT: Record<string, number> = { phone: 4, tablet: 6, desktop: 8 };
+
 export default function Clouds() {
-  const active = useActive();
+  const { tier } = useViewport();
+  const field = clouds.slice(0, COUNT[tier]);
+
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <motion.div
-        className="absolute top-0 left-0 h-full"
-        style={{ width: "200vw" }}
-        animate={active ? { x: ["0vw", "-100vw"] } : false}
-        transition={{ repeat: Infinity, duration: 90, ease: "linear" }}
+      {/* One CSS marquee for the whole sky: a single compositor-owned transform,
+          where this used to be a JS-driven animation on a 200vw layer. */}
+      <div
+        className="mc-marquee absolute top-0 left-0 h-full"
+        style={{ width: "200vw", "--mc-dur": "90s" } as CSSProperties}
       >
         {[0, 1].map((copy) =>
-          clouds.map((c, i) => (
+          field.map((c, i) => (
             <div
               key={`${copy}-${i}`}
               className="absolute"
@@ -52,7 +58,7 @@ export default function Clouds() {
             </div>
           )),
         )}
-      </motion.div>
+      </div>
     </div>
   );
 }

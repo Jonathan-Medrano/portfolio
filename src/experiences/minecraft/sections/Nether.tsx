@@ -4,7 +4,7 @@ import { profile } from "@/data";
 // The Nether: the bottom of the journey. Contact / final call to action.
 export default function Nether() {
   return (
-    <section className="relative flex min-h-dvh flex-col items-center justify-center gap-8 overflow-hidden px-6 text-center">
+    <section className="cv-section relative flex min-h-dvh flex-col items-center justify-center gap-8 overflow-hidden px-6 text-center">
       {/* Netherrack walls. */}
       <div
         className="tex absolute inset-0"

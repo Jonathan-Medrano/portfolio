@@ -156,6 +156,19 @@
     image-rendering: pixelated;
   }
 
+  /* A full-chapter section. The browser skips rendering (layout, paint, and the
+     ambient animations inside) while the chapter is off screen — the Overworld
+     alone is a few thousand block divs, and paying for all three chapters at
+     once is what made the first scroll stutter on a phone.
+
+     Only for sections with a predictable height (min-h-dvh): the remembered
+     size is what keeps the scrollbar from jumping, and a content-sized chapter
+     like the cavern has no honest guess to give. */
+  .cv-section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 100dvh;
+  }
+
   /* Faint block-seam grid for terrain only (ground strips), kept subtle. */
   .mc-blocks {
     background-image:
@@ -203,6 +216,143 @@
       0 5px 0 #232323,
       3px 5px 8px rgba(0, 0, 0, 0.55);
   }
+}
+
+/* ===========================================================================
+   Ambient world motion
+   ===========================================================================
+   The division of labour in this world:
+
+   - CSS (here) owns AMBIENCE — the loops that run forever and never read React
+     state: swaying trees, grazing mobs, drifting clouds, falling snow, glowing
+     lava. These used to be Motion components, which meant a few dozen infinite
+     animations driven from JS, each one a React component re-rendering (the walk
+     cycles ran a setInterval + setState every 160-240ms) for something the
+     compositor can do on its own thread for free.
+   - Motion owns CHOREOGRAPHY — Steve building his name, the creeper cinematic,
+     entrance reveals. Sequencing, springs and interruption are worth its cost.
+
+   Per-element variation comes from custom properties set inline, so one keyframe
+   serves every instance. Putting `data-mc-still` on a chapter parks all of it at
+   once when that chapter scrolls out of view.
+   =========================================================================== */
+
+/* Plants leaning in the wind. --mc-sway is the half-angle. */
+@keyframes mc-sway {
+  0%, 100% { transform: rotate(calc(var(--mc-sway) * -1)); }
+  50% { transform: rotate(var(--mc-sway)); }
+}
+
+/* An animal's body rising and falling as it walks. --mc-bob is the lift. */
+@keyframes mc-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(calc(var(--mc-bob) * -1)); }
+}
+
+/* Two-frame flip-book: the top frame blinks out to reveal the one beneath, which
+   is how the leg animation reads as steps rather than as a slide. The cut is a
+   hard one — 49.99% to 50% — because a leg is either forward or back. */
+@keyframes mc-flip {
+  0%, 49.99% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Grazing back and forth, turning around at each end. --mc-range is the walk. */
+@keyframes mc-wander {
+  0% { transform: translateX(0) scaleX(1); }
+  46% { transform: translateX(var(--mc-range)) scaleX(1); }
+  50% { transform: translateX(var(--mc-range)) scaleX(-1); }
+  96% { transform: translateX(0) scaleX(-1); }
+  100% { transform: translateX(0) scaleX(1); }
+}
+
+/* A bee working the flowers: out, back, further out, home. --mc-x is the reach. */
+@keyframes mc-buzz {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(var(--mc-x), -18px); }
+  50% { transform: translate(calc(var(--mc-x) * 0.33), 8px); }
+  75% { transform: translate(calc(var(--mc-x) * 1.5), -10px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Seamless marquee: the field is duplicated, so sliding it exactly half its own
+   width loops with nothing to pop. */
+@keyframes mc-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Something crossing the whole sky, entering and leaving off screen. */
+@keyframes mc-cross {
+  from { transform: translateX(-14vw); }
+  to { transform: translateX(114vw); }
+}
+
+/* A leaf on the wind: carried sideways, tumbling, fading in and back out. */
+@keyframes mc-leaf {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  15% { transform: translate(calc(var(--mc-drift) * 0.3), 16px) rotate(calc(var(--mc-spin) * 0.35)); opacity: 1; }
+  70% { transform: translate(calc(var(--mc-drift) * 0.7), 6px) rotate(calc(var(--mc-spin) * 0.7)); opacity: 1; }
+  100% { transform: translate(var(--mc-drift), 42px) rotate(var(--mc-spin)); opacity: 0; }
+}
+
+/* A snowflake off the peaks, or a dust mote in the cave: falls (or rises) and
+   fades. --mc-fall is signed, so the same keyframe does both. */
+@keyframes mc-fall {
+  0% { transform: translate(0, 0); opacity: 0; }
+  14% { opacity: var(--mc-peak, 0.85); }
+  70% { opacity: var(--mc-peak, 0.85); }
+  100% { transform: translate(var(--mc-drift, 0px), var(--mc-fall)); opacity: 0; }
+}
+
+/* A torch flame guttering. */
+@keyframes mc-gutter {
+  0%, 100% { opacity: 0.55; }
+  25% { opacity: 0.85; }
+  50% { opacity: 0.5; }
+  75% { opacity: 0.78; }
+}
+
+/* Inviting the visitor down the page. */
+@keyframes mc-nudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(9px); }
+}
+
+.mc-sway,
+.mc-bob,
+.mc-wander,
+.mc-buzz,
+.mc-leaf,
+.mc-fall,
+.mc-gutter,
+.mc-nudge,
+.mc-flip,
+.mc-marquee,
+.mc-cross {
+  animation-duration: var(--mc-dur, 4s);
+  animation-delay: var(--mc-delay, 0s);
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.mc-sway { animation-name: mc-sway; transform-origin: bottom center; }
+.mc-bob { animation-name: mc-bob; }
+.mc-wander { animation-name: mc-wander; }
+.mc-buzz { animation-name: mc-buzz; }
+.mc-leaf { animation-name: mc-leaf; }
+.mc-fall { animation-name: mc-fall; animation-timing-function: linear; }
+.mc-gutter { animation-name: mc-gutter; }
+.mc-nudge { animation-name: mc-nudge; }
+.mc-flip { animation-name: mc-flip; animation-timing-function: linear; }
+.mc-marquee { animation-name: mc-marquee; animation-timing-function: linear; }
+.mc-cross { animation-name: mc-cross; animation-timing-function: linear; }
+
+/* A chapter that has scrolled away. Everything inside it holds its pose instead
+   of burning frames on animals nobody is looking at. */
+[data-mc-still] *,
+[data-mc-still] {
+  animation-play-state: paused !important;
 }
 
 /* Emissive block animations for the cave tilemap. */

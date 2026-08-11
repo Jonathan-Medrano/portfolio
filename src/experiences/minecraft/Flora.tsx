@@ -1,12 +1,25 @@
-import { useEffect, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { motion } from "motion/react";
 import PixelArt from "./PixelArt";
 import BlockWorld from "./BlockWorld";
-import { useActive } from "./active";
+import { cn } from "@/lib/utils";
 
 // Block-built oak trees (real log + leaves textures) and small pixel critters
 // that bring the Overworld plains to life: flowers, tall grass, a sheep, a bee.
+//
+// Every loop in here is CSS (see "Ambient world motion" in index.css). It used to
+// be Motion: a couple of dozen JS-driven infinite animations, and — worse — the
+// walk cycles ran a setInterval that flipped React state every 160-240ms, which
+// re-rendered and rebuilt a whole sprite SVG per step, per animal, forever. The
+// compositor does all of this on its own thread for nothing, and one
+// `data-mc-still` on the chapter parks the lot when it scrolls away.
+
+/**
+ * Duration and delay for one ambient loop. Always set both: custom properties
+ * inherit, so a `Wander` wrapper's timing would otherwise silently become the
+ * timing of the animal's legs inside it.
+ */
+const anim = (durationMs: number, delayMs = 0) =>
+  ({ "--mc-dur": `${durationMs}ms`, "--mc-delay": `${delayMs}ms` }) as CSSProperties;
 
 // Real Minecraft oak proportions: a compact 5-wide canopy of 3 leaf rows over a
 // short trunk (1–2 logs). Trimmed top + no bottom leaf row → light and round.
@@ -35,6 +48,9 @@ const OAK_TALL = [
 
 const OAK_SHAPES = { sm: OAK_SMALL, lg: OAK_LARGE, xl: OAK_TALL };
 
+/** Columns wide, so a caller can keep a tree clear of the scene's centre. */
+export const OAK_COLS = 5;
+
 // An oak tree that sways gently at its base, like wind through the canopy.
 export function OakTree({
   block = 20,
@@ -46,17 +62,17 @@ export function OakTree({
   className?: string;
 }) {
   const map = OAK_SHAPES[size];
-  const cols = map[0].length;
-  const active = useActive();
   return (
-    <motion.div
-      className={className}
-      style={{ width: cols * block, transformOrigin: "bottom center" }}
-      animate={active ? { rotate: [-1, 1, -1] } : false}
-      transition={{ repeat: Infinity, duration: size === "sm" ? 4.5 : 6, ease: "easeInOut" }}
+    <div
+      className={cn("mc-sway", className)}
+      style={{
+        width: map[0].length * block,
+        "--mc-sway": "1deg",
+        ...anim(size === "sm" ? 4500 : 6000),
+      } as CSSProperties}
     >
       <BlockWorld map={map} seam={false} />
-    </motion.div>
+    </div>
   );
 }
 
@@ -119,16 +135,13 @@ export function Flower({
   className?: string;
   style?: CSSProperties;
 }) {
-  const active = useActive();
   return (
-    <motion.div
-      className={className}
-      style={{ transformOrigin: "bottom center", ...style }}
-      animate={active ? { rotate: [-6, 6, -6] } : false}
-      transition={{ repeat: Infinity, duration: 3.4, ease: "easeInOut", delay }}
+    <div
+      className={cn("mc-sway", className)}
+      style={{ "--mc-sway": "6deg", ...anim(3400, delay * 1000), ...style } as CSSProperties}
     >
       <div className="pixelated" style={{ width: size, height: size, ...texStyle(kind) }} />
-    </motion.div>
+    </div>
   );
 }
 
@@ -146,64 +159,95 @@ export function GrassTuft({
   className?: string;
   style?: CSSProperties;
 }) {
-  const active = useActive();
   return (
-    <motion.div
-      className={className}
-      style={{ transformOrigin: "bottom center", ...style }}
-      animate={active ? { rotate: [-7, 7, -7] } : false}
-      transition={{ repeat: Infinity, duration: 2.8, ease: "easeInOut", delay }}
+    <div
+      className={cn("mc-sway", className)}
+      style={{ "--mc-sway": "7deg", ...anim(2800, delay * 1000), ...style } as CSSProperties}
     >
       <div className="pixelated" style={{ width: size, height: size, ...texStyle(tex) }} />
-    </motion.div>
+    </div>
   );
 }
 
-// Alternates a boolean on an interval — drives a two-frame leg walk cycle.
-// Stops the interval when the section is off screen.
-function useStep(ms: number, active = true) {
-  const [on, setOn] = useState(false);
-  useEffect(() => {
-    if (!active) return;
-    const id = setInterval(() => setOn((v) => !v), ms);
-    return () => clearInterval(id);
-  }, [ms, active]);
-  return on;
-}
-
-// Walks an animal back and forth, flipping to face the way it's heading.
+/**
+ * Walks an animal back and forth, flipping to face the way it's heading.
+ *
+ * `range` is a CSS length, and callers pass it in `vw`: it used to be a pixel
+ * number, so a sheep given a 140px beat wandered a third of the way across a
+ * phone and walked straight through Steve.
+ */
 export function Wander({
-  range = 120,
+  range = "12vw",
   duration = 14,
   delay = 0,
   className,
   children,
 }: {
-  range?: number;
+  range?: string;
   duration?: number;
   delay?: number;
   className?: string;
   children: ReactNode;
 }) {
-  const active = useActive();
   return (
-    <motion.div
-      className={className}
-      animate={active ? { x: [0, range, range, 0, 0], scaleX: [1, 1, -1, -1, 1] } : false}
-      transition={{
-        duration,
-        times: [0, 0.46, 0.5, 0.96, 1],
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay,
-      }}
+    <div
+      className={cn("mc-wander", className)}
+      style={{ "--mc-range": range, ...anim(duration * 1000, delay * 1000) } as CSSProperties}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
 // --- Mob sprites (higher-res, all facing right; flip handled by <Wander>) ---
+
+/**
+ * An animal: a static body over a two-frame leg flip-book, bobbing as it walks.
+ *
+ * The legs are the only part that changes between steps, so they are the only
+ * part rendered twice. The top frame blinks out to reveal the one under it — a
+ * hard cut, no interpolation, which is what makes it read as footfalls.
+ */
+function Mob({
+  body,
+  legs,
+  palette,
+  block,
+  bob,
+  bobMs,
+  stepMs,
+  className,
+}: {
+  body: string[];
+  legs: [string[], string[]];
+  palette: Record<string, string>;
+  block: number;
+  /** Body lift at mid-stride, px. */
+  bob: number;
+  bobMs: number;
+  /** Time one leg pose is held, ms. */
+  stepMs: number;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn("mc-bob", className)}
+      style={{ "--mc-bob": `${bob}px`, ...anim(bobMs) } as CSSProperties}
+    >
+      <PixelArt rows={body} palette={palette} pixel={block} className="pixelated block" />
+      <div className="relative">
+        <PixelArt rows={legs[1]} palette={palette} pixel={block} className="pixelated block" />
+        <PixelArt
+          rows={legs[0]}
+          palette={palette}
+          pixel={block}
+          className="mc-flip pixelated absolute top-0 left-0"
+          style={anim(stepMs * 2)}
+        />
+      </div>
+    </div>
+  );
+}
 
 // Sheep (facing right): rounded woolly body, with the head poking out the front
 // lower-down (tan face + eye), and four legs.
@@ -217,27 +261,24 @@ const SHEEP_BODY = [
   ".WWWWWWWWWWWHHH",
   ".WWWWWWWWWWWW..",
 ];
-const SHEEP_LEGS = [
+const SHEEP_LEGS: [string[], string[]] = [
   ["..LL......LL...", "..LL......LL..."],
   [".LL........LL..", ".LL........LL.."],
 ];
+const SHEEP_PALETTE = { W: "#eeece1", H: "#d7b59c", E: "#2e2622", L: "#b29a86" };
 
 export function Sheep({ block = 7, className }: { block?: number; className?: string }) {
-  const active = useActive();
-  const step = useStep(220, active);
   return (
-    <motion.div
+    <Mob
+      body={SHEEP_BODY}
+      legs={SHEEP_LEGS}
+      palette={SHEEP_PALETTE}
+      block={block}
+      bob={2}
+      bobMs={550}
+      stepMs={220}
       className={className}
-      animate={active ? { y: [0, -2, 0] } : false}
-      transition={{ repeat: Infinity, duration: 0.55, ease: "easeInOut" }}
-    >
-      <PixelArt
-        rows={[...SHEEP_BODY, ...SHEEP_LEGS[step ? 1 : 0]]}
-        palette={{ W: "#eeece1", H: "#d7b59c", E: "#2e2622", L: "#b29a86" }}
-        pixel={block}
-        className="pixelated"
-      />
-    </motion.div>
+    />
   );
 }
 
@@ -253,36 +294,33 @@ const PIG_BODY = [
   ".PPPPPPPPPPPPPSS",
   ".PPPPPPPPPPPPPP.",
 ];
-const PIG_LEGS = [
+const PIG_LEGS: [string[], string[]] = [
   ["..HH.....HH.....", "..HH.....HH....."],
   [".HH.......HH....", ".HH.......HH...."],
 ];
+const PIG_PALETTE = {
+  P: "#e89aa0",
+  p: "#d98a90",
+  E: "#d07f86",
+  t: "#d98a90",
+  S: "#cf7f86",
+  n: "#9e5a60",
+  e: "#33272a",
+  H: "#7a5256",
+};
 
 export function Pig({ block = 7, className }: { block?: number; className?: string }) {
-  const active = useActive();
-  const step = useStep(240, active);
   return (
-    <motion.div
+    <Mob
+      body={PIG_BODY}
+      legs={PIG_LEGS}
+      palette={PIG_PALETTE}
+      block={block}
+      bob={1.5}
+      bobMs={600}
+      stepMs={240}
       className={className}
-      animate={active ? { y: [0, -1.5, 0] } : false}
-      transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }}
-    >
-      <PixelArt
-        rows={[...PIG_BODY, ...PIG_LEGS[step ? 1 : 0]]}
-        palette={{
-          P: "#e89aa0",
-          p: "#d98a90",
-          E: "#d07f86",
-          t: "#d98a90",
-          S: "#cf7f86",
-          n: "#9e5a60",
-          e: "#33272a",
-          H: "#7a5256",
-        }}
-        pixel={block}
-        className="pixelated"
-      />
-    </motion.div>
+    />
   );
 }
 
@@ -299,51 +337,49 @@ const CHK_BODY = [
   "..tWWWWWWW..",
   "...WWWWWW...",
 ];
-const CHK_LEGS = [
+const CHK_LEGS: [string[], string[]] = [
   ["....y.y.....", "...y...y...."],
   ["...y.y......", "..y...y....."],
 ];
+const CHK_PALETTE = {
+  W: "#f4f4f4",
+  R: "#d6402f",
+  w: "#c0392b",
+  b: "#f0a92e",
+  t: "#dcdcdc",
+  y: "#e0902a",
+  e: "#2e2622",
+};
 
 export function Chicken({ block = 7, className }: { block?: number; className?: string }) {
-  const active = useActive();
-  const step = useStep(160, active);
   return (
-    <motion.div
+    <Mob
+      body={CHK_BODY}
+      legs={CHK_LEGS}
+      palette={CHK_PALETTE}
+      block={block}
+      bob={1.5}
+      bobMs={380}
+      stepMs={160}
       className={className}
-      animate={active ? { y: [0, -1.5, 0] } : false}
-      transition={{ repeat: Infinity, duration: 0.38, ease: "easeInOut" }}
-    >
-      <PixelArt
-        rows={[...CHK_BODY, ...CHK_LEGS[step ? 1 : 0]]}
-        palette={{ W: "#f4f4f4", R: "#d6402f", w: "#c0392b", b: "#f0a92e", t: "#dcdcdc", y: "#e0902a", e: "#2e2622" }}
-        pixel={block}
-        className="pixelated"
-      />
-    </motion.div>
+    />
   );
 }
 
 // A bee buzzing along a looping path across the sky.
-export function Bee({ className }: { className?: string }) {
-  const active = useActive();
+const BEE_ROWS = ["w...w", ".yby.", "w...w"];
+const BEE_PALETTE = { w: "#ffffff", y: "#f4c20d", b: "#1a1a1a" };
+
+export function Bee({ reach = 60, className }: { reach?: number; className?: string }) {
   return (
-    <motion.div
-      className={className}
-      animate={active ? { x: [0, 60, 20, 90, 0], y: [0, -18, 8, -10, 0] } : false}
-      transition={{ repeat: Infinity, duration: 9, ease: "easeInOut" }}
+    <div
+      className={cn("mc-buzz", className)}
+      style={{ "--mc-x": `${reach}px`, ...anim(9000) } as CSSProperties}
     >
-      <motion.div
-        animate={active ? { y: [0, -3, 0] } : false}
-        transition={{ repeat: Infinity, duration: 0.5, ease: "easeInOut" }}
-      >
-        <PixelArt
-          rows={["w...w", ".yby.", "w...w"]}
-          palette={{ w: "#ffffff", y: "#f4c20d", b: "#1a1a1a" }}
-          pixel={3}
-          className="pixelated"
-        />
-      </motion.div>
-    </motion.div>
+      <div className="mc-bob" style={{ "--mc-bob": "3px", ...anim(500) } as CSSProperties}>
+        <PixelArt rows={BEE_ROWS} palette={BEE_PALETTE} pixel={3} className="pixelated" />
+      </div>
+    </div>
   );
 }
 
@@ -354,39 +390,30 @@ const LEAVES = Array.from({ length: 14 }, (_, i) => ({
   top: 8 + ((i * 9) % 52),
   left: (i * 17) % 95,
   size: 6 + (i % 3) * 2,
-  dur: 7 + (i % 5) * 1.5,
-  delay: (i % 7) * 1.1,
+  dur: 7000 + (i % 5) * 1500,
+  delay: (i % 7) * 1100,
   drift: 160 + (i % 4) * 80,
-  dir: i % 2 ? 1 : -1,
+  spin: (i % 2 ? 1 : -1) * 400,
   color: LEAF_COLORS[i % 3],
 }));
 
-export function Leaves({ className }: { className?: string }) {
-  const active = useActive();
+export function Leaves({ count = LEAVES.length, className }: { count?: number; className?: string }) {
   return (
     <div className={className} aria-hidden>
-      {LEAVES.map((l, i) => (
-        <motion.span
+      {LEAVES.slice(0, count).map((l, i) => (
+        <span
           key={i}
-          className="pixelated absolute"
-          style={{ top: `${l.top}%`, left: `${l.left}%`, width: l.size, height: l.size, background: l.color }}
-          animate={
-            active
-              ? {
-                  x: [0, l.drift * 0.3, l.drift * 0.7, l.drift],
-                  y: [0, 16, 6, 42],
-                  rotate: [0, l.dir * 140, l.dir * 280, l.dir * 400],
-                  opacity: [0, 1, 1, 0],
-                }
-              : false
-          }
-          transition={{
-            duration: l.dur,
-            times: [0, 0.15, 0.7, 1],
-            repeat: Infinity,
-            delay: l.delay,
-            ease: "easeInOut",
-          }}
+          className="mc-leaf pixelated absolute"
+          style={{
+            top: `${l.top}%`,
+            left: `${l.left}%`,
+            width: l.size,
+            height: l.size,
+            background: l.color,
+            "--mc-drift": `${l.drift}px`,
+            "--mc-spin": `${l.spin}deg`,
+            ...anim(l.dur, l.delay),
+          } as CSSProperties}
         />
       ))}
     </div>
@@ -439,14 +466,12 @@ export function Melon({ size = 72, className, style }: { size?: number; classNam
 // A leafy bush (real texture), swaying gently.
 export function Bush({ size = 72, className, style }: { size?: number; className?: string; style?: CSSProperties }) {
   return (
-    <motion.div
-      className={className}
-      style={{ transformOrigin: "bottom center", ...style }}
-      animate={{ rotate: [-2, 2, -2] }}
-      transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+    <div
+      className={cn("mc-sway", className)}
+      style={{ "--mc-sway": "2deg", ...anim(4000), ...style } as CSSProperties}
     >
       <TexProp tex="bush" size={size} />
-    </motion.div>
+    </div>
   );
 }
 
@@ -490,23 +515,33 @@ const FLOCK = [
   { x: -36, y: 18 },
   { x: 36, y: 18 },
 ];
+const BIRD_FRAMES: [string[], string[]] = [
+  ["w...w", ".w.w."],
+  [".w.w.", "..w.."],
+];
+const BIRD_PALETTE = { w: "#46535e" };
+
 export function Birds({ className }: { className?: string }) {
-  const active = useActive();
-  const step = useStep(200, active);
-  const rows = step ? ["w...w", ".w.w."] : [".w.w.", "..w.."];
   return (
-    <motion.div
-      className={className}
-      animate={active ? { x: ["-12vw", "112vw"] } : false}
-      transition={{ repeat: Infinity, duration: 38, ease: "linear" }}
+    <div
+      className={cn("mc-cross", className)}
+      style={anim(38000)}
       aria-hidden
     >
       {FLOCK.map((b, i) => (
         <div key={i} className="absolute" style={{ left: b.x, top: b.y }}>
-          <PixelArt rows={rows} palette={{ w: "#46535e" }} pixel={3} className="pixelated" />
+          {/* Wings: the same two-frame flip-book the animals use. */}
+          <PixelArt rows={BIRD_FRAMES[1]} palette={BIRD_PALETTE} pixel={3} className="pixelated block" />
+          <PixelArt
+            rows={BIRD_FRAMES[0]}
+            palette={BIRD_PALETTE}
+            pixel={3}
+            className="mc-flip pixelated absolute top-0 left-0"
+            style={anim(400)}
+          />
         </div>
       ))}
-    </motion.div>
+    </div>
   );
 }
 
@@ -514,21 +549,30 @@ export function Birds({ className }: { className?: string }) {
 const SNOW = Array.from({ length: 18 }, (_, i) => ({
   left: (i * 13 + 6) % 100,
   size: 2 + (i % 2),
-  dur: 6 + (i % 5),
-  delay: (i % 6) * 0.8,
-  drift: (i % 3) - 1,
+  dur: 6000 + (i % 5) * 1000,
+  delay: (i % 6) * 800,
+  drift: ((i % 3) - 1) * 22,
 }));
-export function SnowFall({ className }: { className?: string }) {
-  const active = useActive();
+
+export function SnowFall({ count = SNOW.length, className }: { count?: number; className?: string }) {
   return (
     <div className={className} aria-hidden>
-      {SNOW.map((s, i) => (
-        <motion.span
+      {SNOW.slice(0, count).map((s, i) => (
+        <span
           key={i}
-          className="absolute rounded-full bg-white/80"
-          style={{ left: `${s.left}%`, top: 0, width: s.size, height: s.size }}
-          animate={active ? { y: [0, 170], x: [0, s.drift * 22], opacity: [0, 0.85, 0] } : false}
-          transition={{ duration: s.dur, delay: s.delay, repeat: Infinity, ease: "linear" }}
+          className="mc-fall absolute rounded-full bg-white/80"
+          style={{
+            left: `${s.left}%`,
+            top: 0,
+            width: s.size,
+            height: s.size,
+            // Relative to the viewport, not a hardcoded 170px: this band is sized
+            // as a share of the screen, and on a phone the flakes used to fall
+            // clean through the bottom of it.
+            "--mc-fall": "22vh",
+            "--mc-drift": `${s.drift}px`,
+            ...anim(s.dur, s.delay),
+          } as CSSProperties}
         />
       ))}
     </div>

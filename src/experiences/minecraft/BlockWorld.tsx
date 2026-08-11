@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { cn } from "@/lib/utils";
 
 // Renders a Minecraft-style 2D cross-section: a grid of textured blocks built
@@ -48,7 +49,7 @@ export const LEGEND: Record<string, BlockDef> = {
 
 const SEAM = "inset 0 0 0 1px rgba(0,0,0,0.22)";
 
-export default function BlockWorld({
+function BlockWorld({
   map,
   className,
   seam = true,
@@ -107,3 +108,8 @@ export default function BlockWorld({
     </div>
   );
 }
+
+// The grids are the heaviest thing in the world — a mountain range is hundreds of
+// divs, the cavern cross-section 448. Maps are module constants or memoised, so
+// this skips rebuilding all of them when an ancestor re-renders on resize.
+export default memo(BlockWorld);

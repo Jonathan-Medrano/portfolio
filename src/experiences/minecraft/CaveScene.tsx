@@ -1,9 +1,7 @@
 import type { CSSProperties } from "react";
-import { motion, useReducedMotion } from "motion/react";
 import BlockWorld from "./BlockWorld";
 import MiningSteve from "./MiningSteve";
 import { TorchSprite } from "./realSprites";
-import { useActive } from "./active";
 
 // A 2D Minecraft cross-section. Solid blocks form the terrain; the carved-out
 // air in the middle is the cave, where Steve stands on a cobblestone ledge and
@@ -35,24 +33,27 @@ const CAVE_MAP = [
 
 // Torch mounted on a cave wall, with a flickering warm light pool.
 function WallTorch({ style }: { style?: CSSProperties }) {
-  const still = useReducedMotion();
-  const active = useActive();
   return (
     <div className="pointer-events-none absolute" style={style}>
-      <motion.div
-        className="absolute -inset-10 rounded-full bg-orange-400/30 blur-2xl"
-        animate={active && !still ? { opacity: [0.55, 0.85, 0.5, 0.75] } : false}
-        transition={{ repeat: Infinity, duration: 0.7, ease: "easeInOut" }}
+      <div
+        className="mc-gutter absolute -inset-10 rounded-full bg-orange-400/30 blur-2xl"
+        style={{ "--mc-dur": "700ms" } as CSSProperties}
       />
       <TorchSprite size={32} className="relative" />
     </div>
   );
 }
 
-export default function CaveScene() {
-  const still = useReducedMotion();
-  const active = useActive();
+// Dust hanging in the torchlight. Rises rather than falls, hence the negative
+// travel — same keyframe as the snow up on the peaks.
+const MOTES = [0, 1, 2, 3, 4, 5].map((i) => ({
+  left: `${18 + i * 12}%`,
+  top: `${30 + (i % 3) * 12}%`,
+  dur: 4000 + i * 1000,
+  delay: i * 600,
+}));
 
+export default function CaveScene() {
   return (
     <div className="relative w-full overflow-hidden">
       {/* Dark cave air showing behind the carved-out blocks. */}
@@ -81,17 +82,20 @@ export default function CaveScene() {
       <WallTorch style={{ right: "25%", bottom: "52%", zIndex: 20 }} />
 
       {/* Floating dust motes for atmosphere. */}
-      {active &&
-        !still &&
-        [0, 1, 2, 3, 4, 5].map((i) => (
-          <motion.span
-            key={i}
-            className="pointer-events-none absolute z-20 size-1 rounded-full bg-amber-200/50"
-            style={{ left: `${18 + i * 12}%`, top: `${30 + (i % 3) * 12}%` }}
-            animate={{ y: [0, -14, 0], opacity: [0, 0.7, 0] }}
-            transition={{ repeat: Infinity, duration: 4 + i, delay: i * 0.6 }}
-          />
-        ))}
+      {MOTES.map((m, i) => (
+        <span
+          key={i}
+          className="mc-fall pointer-events-none absolute z-20 size-1 rounded-full bg-amber-200/50"
+          style={{
+            left: m.left,
+            top: m.top,
+            "--mc-fall": "-14px",
+            "--mc-peak": 0.7,
+            "--mc-dur": `${m.dur}ms`,
+            "--mc-delay": `${m.delay}ms`,
+          } as CSSProperties}
+        />
+      ))}
 
       {/* Steve mining on the cobblestone ledge inside the cave.
           MiningSteve is a fixed 256px tall while the scene around it is sized

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { SteveCharacter } from "./realSprites";
 import WoolName, { woolRows } from "./WoolName";
-import { useWorldBlock } from "./worldScale";
+import { useViewport } from "./worldScale";
 
 // The hero centerpiece: Steve pillars UP on a column of dirt (placing a block
 // under his feet and hopping onto it, the real Minecraft way — never floating),
@@ -25,24 +25,23 @@ const BREAK_MS = 110; // per dirt block broken on the way down
 
 type Phase = "rise" | "build" | "drop" | "done";
 
-/** Largest wool block size that still fits `cols` columns across the viewport. */
-function fitBlock(cols: number): number {
-  if (cols === 0 || typeof window === "undefined") return BLOCK_MAX;
-  const available = window.innerWidth - SIDE_PADDING;
+/** Largest wool block size that still fits `cols` columns across `viewportW`. */
+function fitBlock(cols: number, viewportW: number): number {
+  if (cols === 0) return BLOCK_MAX;
+  const available = viewportW - SIDE_PADDING;
   return Math.max(BLOCK_MIN, Math.min(BLOCK_MAX, Math.floor(available / cols)));
 }
 
-function useResponsiveBlock(cols: number): number {
-  const [block, setBlock] = useState(() => fitBlock(cols));
-
-  useEffect(() => {
-    const update = () => setBlock(fitBlock(cols));
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, [cols]);
-
-  return block;
+/**
+ * How far above the ground surface the hero build starts, in px — the bottom edge
+ * of the wool name.
+ *
+ * Exported because the scenery has to stay out from under it: the Overworld sizes
+ * its oak canopies against this so a tree can never grow into the title.
+ */
+export function heroBase(worldBlock: number): number {
+  // Steve's feet at the top of the pillar, plus his own height, plus the gap.
+  return PILLAR_BLOCKS * worldBlock + 2 * worldBlock + NAME_GAP;
 }
 
 export default function NameBuild({
@@ -58,20 +57,18 @@ export default function NameBuild({
   const rows = useMemo(() => woolRows(name), [name]);
   const cols = rows[0]?.length ?? 0;
 
+  // Steve and his dirt pillar are measured in world blocks, not px, so they
+  // shrink with the rest of the scene instead of towering over the title.
+  // A Minecraft skin is 16 units wide and 32 tall = one block wide, two tall.
+  const { w: viewportW, block: DIRT } = useViewport();
+
   // The name is laid out in fixed-size blocks, so its width is cols * BLOCK —
   // "JONA" is 23 columns, which at 22px is 506px and blew straight through a
   // 390px phone. The section clips overflow, so it failed silently: the visitor
   // just read "TON". Size the block to the viewport instead of hoping it fits.
-  const block = useResponsiveBlock(cols);
-
-  // Steve and his dirt pillar are measured in world blocks, not px, so they
-  // shrink with the rest of the scene instead of towering over the title.
-  // A Minecraft skin is 16 units wide and 32 tall = one block wide, two tall.
-  const DIRT = useWorldBlock();
+  const block = fitBlock(cols, viewportW);
   const UNIT = DIRT / 16;
   const STEVE_W = DIRT;
-  const STEVE_H = DIRT * 2;
-  const RISE_TOP = PILLAR_BLOCKS * DIRT; // Steve's feet height at the top
 
   // Reveal order: centre column first, spreading outward.
   const rank = useMemo(() => {
@@ -133,7 +130,7 @@ export default function NameBuild({
 
   const nameW = cols * block;
   const nameH = rows.length * block;
-  const nameBase = RISE_TOP + STEVE_H + NAME_GAP; // bottom px of the name
+  const nameBase = heroBase(DIRT); // bottom px of the name
   const stageH = nameBase + nameH + 64; // room for the role above
 
   return (
@@ -145,9 +142,13 @@ export default function NameBuild({
       // overflow itself — clamping nothing.
       style={{ width: Math.max(nameW, 320), maxWidth: "100vw", height: stageH }}
     >
-      {/* Role kicker, above the name. */}
+      {/* Role kicker, above the name.
+          No `w-max` and no `whitespace-nowrap`: "Desarrollador Full Stack" in a
+          wide pixel typeface with 0.3em tracking is ~390px, so on a phone it ran
+          off both edges of the clipped section and the visitor read "ESARROLLADOR
+          FULL STAC". It wraps now, and the tracking eases off where it's tight. */}
       <motion.p
-        className="font-mc absolute inset-x-0 mx-auto w-max text-center text-[10px] tracking-[0.3em] whitespace-nowrap text-sky-950 uppercase sm:text-xs"
+        className="font-mc absolute inset-x-0 mx-auto max-w-[92vw] text-center text-[10px] tracking-[0.16em] text-balance text-sky-950 uppercase sm:text-xs sm:tracking-[0.3em]"
         style={{ bottom: nameBase + nameH + 22 }}
         initial={false}
         animate={{ opacity: done ? 1 : 0, y: done ? 0 : 8 }}
