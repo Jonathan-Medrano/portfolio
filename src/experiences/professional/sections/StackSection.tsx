@@ -10,12 +10,7 @@ export default function StackSection() {
           {profile.bio}
         </p>
 
-        <div className="flex flex-col gap-5">
-          <h3 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-            Tecnologías con las que trabajé
-          </h3>
-          <SkillsGrid />
-        </div>
+        <SkillsGrid />
 
         <div className="flex flex-col gap-4">
           <h3 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">

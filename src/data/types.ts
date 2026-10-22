@@ -24,6 +24,12 @@ export interface Skill {
    * Binary "I've worked with this" — no skill-level percentages on purpose.
    */
   icon: string;
+  /**
+   * True for the handful used day to day at work. The rest are what was used
+   * in side projects: listed, but visually quieter, so the depth of the core
+   * stack isn't buried under breadth.
+   */
+  core?: boolean;
 }
 
 export type ProjectStatus = "live" | "beta" | "wip" | "archived" | "showcase";
