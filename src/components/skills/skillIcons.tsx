@@ -45,7 +45,7 @@ export const skillIcons: Record<string, IconEntry> = {
   postgresql: { Icon: SiPostgresql, color: "#4169E1" },
   mysql: { Icon: SiMysql, color: "#4479A1" },
   sqlite: { Icon: SiSqlite, color: "#003B57" },
-  express: { Icon: SiExpress, color: "#000000" },
+  express: { Icon: SiExpress, color: "currentColor" },
   python: { Icon: SiPython, color: "#3776AB" },
   cplusplus: { Icon: SiCplusplus, color: "#00599C" },
   c: { Icon: SiC, color: "#A8B9CC" },

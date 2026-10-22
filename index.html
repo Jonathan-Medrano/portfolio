@@ -4,13 +4,28 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Aplica el tema antes del primer render: sin parpadeo blanco en modo oscuro. -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          var dark = saved
+            ? saved === "dark"
+            : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          if (dark) {
+            document.documentElement.classList.add("dark");
+            document.documentElement.style.colorScheme = "dark";
+          }
+        } catch (e) {}
+      })();
+    </script>
 
     <title>
       Jonathan Medrano — Desarrollador Full Stack | React · TypeScript · .NET
     </title>
     <meta
       name="description"
-      content="Desarrollador full stack con foco en front-end. Migré 28 de los ~65 módulos de un ERP de facturación a React + TypeScript, y construyo mis propios SaaS: uno en producción, cobrando con Mercado Pago."
+      content="Desarrollador full stack con foco en front-end. Lidero la migración de un ERP de facturación a React + TypeScript, desarrollo con IA para agilizar el trabajo, y construyo proyectos propios de punta a punta: venta de entradas con Mercado Pago, scraping y bots, SaaS con IA."
     />
     <meta name="author" content="Jonathan Medrano" />
     <link rel="canonical" href="https://jonathanmedrano.vercel.app/" />
@@ -25,7 +40,7 @@
     />
     <meta
       property="og:description"
-      content="React · TypeScript · C#/.NET · Node. Productos propios, uno en producción con clientes."
+      content="React · TypeScript · C#/.NET · Node. Proyectos propios: venta de entradas, scraping y bots, SaaS con IA."
     />
     <meta property="og:locale" content="es_AR" />
     <!-- URL ABSOLUTA, no relativa: LinkedIn, WhatsApp y Slack descartan las
@@ -40,7 +55,7 @@
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="Jonathan Medrano — Desarrollador Full Stack"
+      content="Jonathan Medrano — Desarrollador Full Stack. Ticketera, un sistema de venta de entradas con Mercado Pago, QR y panel de administración."
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta

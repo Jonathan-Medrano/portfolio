@@ -1,5 +1,6 @@
 import { experience } from "@/data";
 import Section from "../Section";
+import ExperienceVisuals from "../ExperienceVisuals";
 
 // Paid work. This section exists because a side project and a job are read
 // very differently: someone else signed off on this one.
@@ -41,6 +42,8 @@ export default function ExperienceSection() {
                 {job.context}
               </p>
             </header>
+
+            {job.visuals && <ExperienceVisuals visuals={job.visuals} />}
 
             <ul className="flex max-w-3xl flex-col gap-3">
               {job.highlights.map((highlight) => (

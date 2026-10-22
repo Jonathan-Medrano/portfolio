@@ -40,10 +40,19 @@ puede contradecir a las fechas de abajo.
 ```
 src/
   data/                 la fuente de verdad: perfil, experiencia, proyectos, stack
+    ticketeraGallery.ts las capturas de Ticketera, agrupadas, con su epígrafe
+    ticketeraArchitecture.ts  diagrama y flujos de Ticketera (verificados contra el código)
   experiences/
-    professional/       las secciones de la página
+    professional/       las secciones de la página, ProjectGallery, ProjectArchitecture,
+                        ExperienceVisuals y PriceHistoryDemo (demo con datos de muestra)
   components/           UI reutilizable (shadcn)
+public/projects/        capturas de proyectos (WebP)
+scripts/                audit.mjs (capturas en 3 anchos), gen-og.mjs (imagen social)
 ```
+
+**Las capturas de Ticketera son reales**: salen de la app corriendo con datos
+simulados (sin marca ni datos del cliente). Se generan en el repo de Ticketera
+y acá solo se recortan a 16:10 y se pasan a WebP.
 
 ## Correrlo
 
@@ -51,6 +60,7 @@ src/
 npm install
 npm run dev      # http://localhost:5173
 npm run build    # typecheck + build de producción
+node scripts/audit.mjs   # capturas en móvil/tablet/escritorio + chequeo de desborde
 ```
 
 ---

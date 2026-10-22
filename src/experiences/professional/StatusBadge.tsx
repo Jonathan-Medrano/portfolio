@@ -12,6 +12,7 @@ const STATUS: Record<ProjectStatus, { label: string; dot: string }> = {
   live: { label: "En producción", dot: "bg-emerald-500" },
   beta: { label: "En beta", dot: "bg-amber-500" },
   wip: { label: "En desarrollo activo", dot: "bg-sky-500" },
+  showcase: { label: "Proyecto de portfolio", dot: "bg-violet-500" },
   archived: { label: "Desarrollo finalizado", dot: "bg-muted-foreground" },
 };
 

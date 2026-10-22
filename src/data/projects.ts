@@ -1,11 +1,12 @@
 import type { LabProject, Project } from "./types";
+import { ticketeraGallery } from "./ticketeraGallery";
+import { bajoElPrecioGallery, mecanicosGallery } from "./projectGalleries";
 
 // Order matters: best first. `highlights` is the part that gets you the
 // interview — each bullet is a technical decision you can defend, not a feature.
 //
 // Four, and the number is the point. A fifth card doesn't add 20% more
-// evidence: it takes attention away from VIKUPASS, the only one with a paying
-// client, which is worth more than the rest combined. Each of the four also has
+// evidence: it takes attention away from Ticketera, the deepest one. Each of the four also has
 // to prove something the other three don't — otherwise it's repetition wearing
 // a different logo.
 //
@@ -13,12 +14,12 @@ import type { LabProject, Project } from "./types";
 // isn't true, which is worse than showing no link at all.
 export const projects: Project[] = [
   {
-    id: "vikupass",
-    title: "VIKUPASS",
+    id: "ticketera",
+    title: "Ticketera",
     summary:
-      "Ticketera SaaS multi-tenant para productoras de eventos. En producción.",
+      "Plataforma multi-tenant de venta de entradas para productoras de eventos.",
     description:
-      "Plataforma white-label para productoras: venta de entradas, barra/POS, control de acceso por QR, revendedores y reportería. Cada productora vende en su propio subdominio, con su logo y su paleta, y cobra directo en su cuenta de Mercado Pago. En producción, con un cliente usándola.",
+      "Plataforma white-label: cada productora vende en su propio sitio, con su logo y su plantilla, y cobra directo en su cuenta de Mercado Pago. Incluye venta de entradas y consumibles con QR, control de acceso, punto de venta, revendedores, marketing y una consola para el dueño de la plataforma. Es un proyecto de portfolio: lo construí de punta a punta para practicar un sistema real con dinero de por medio. Las capturas son de la app corriendo con datos simulados.",
     highlights: [
       "Stock a prueba de sobreventa: transacción serializable con bloqueo de fila y reserva temporal durante el checkout, liberada automáticamente al expirar.",
       "Cobros con Mercado Pago marketplace vía OAuth: la plata va directo a la cuenta del organizador, con reconciliación por webhook y reembolsos auditados.",
@@ -34,45 +35,14 @@ export const projects: Project[] = [
       "Express",
       "Prisma",
       "PostgreSQL",
-      "Supabase",
       "Mercado Pago",
     ],
-    status: "live",
+    status: "showcase",
     kind: "product",
     featured: true,
-    links: [{ label: "Ver en vivo", url: "https://vikupass.com" }],
-  },
-  {
-    id: "clip-editor",
-    title: "ClipEditor",
-    summary:
-      "Producción de video automatizada: guion, voz, animación, render y publicación.",
-    description:
-      "Empezó como un editor de subtítulos para Shorts y terminó siendo un pipeline completo. Incluye un motor de escena propio —mundo, cámara, escenario, reparto y ciclo de caminata— que reemplazó a Remotion, y un piloto automático que produce, publica y lee la analítica para decidir el próximo video.",
-    highlights: [
-      "El trabajo pesado nunca está en el request: Fastify encola en BullMQ sobre Redis y los workers de Python lo consumen aparte. Renderizar tarda minutos; si el usuario espera, la conexión se cae y no hay reintento.",
-      "Once estilos de subtítulo sincronizado —karaoke, neón, glitch, máquina de escribir— cada uno como proceso aislado: un cambio en el timing de uno no puede romper a los otros.",
-      "La escena se valida antes de renderizar: si un personaje quedó fuera de cuadro, falla ahí y no después de gastar minutos de CPU.",
-      "Los proveedores externos (ElevenLabs, Gemini, fal.ai, Pexels) entran por adaptadores, así cambiar de proveedor de voz no obliga a tocar el pipeline.",
-    ],
-    stack: [
-      "Node.js",
-      "Fastify",
-      "BullMQ",
-      "Redis",
-      "Python",
-      "FFmpeg",
-      "React",
-      "Cloudflare R2",
-    ],
-    status: "wip",
-    kind: "product",
-    links: [
-      {
-        label: "Ver código",
-        url: "https://github.com/Jonathan-Medrano/clip-editor",
-      },
-    ],
+    gallery: ticketeraGallery,
+    architecture: true,
+    links: [],
   },
   {
     id: "bajo-el-precio",
@@ -99,6 +69,8 @@ export const projects: Project[] = [
       "Mercado Pago",
       "Fly.io",
     ],
+    demo: "price-history",
+    gallery: bajoElPrecioGallery,
     status: "archived",
     kind: "product",
     links: [
@@ -132,7 +104,8 @@ export const projects: Project[] = [
       "Gemini",
       "Turborepo",
     ],
-    status: "beta",
+    gallery: mecanicosGallery,
+    status: "showcase",
     kind: "product",
     links: [],
   },
@@ -169,6 +142,13 @@ export const lab: LabProject[] = [
     summary:
       "Pipeline de generación de personajes y fondos con IA para juegos idle y tower defense, con contratos versionados para que el estilo se mantenga consistente entre imágenes.",
     stack: ["Node.js", "Blender", "Modelos de difusión"],
+  },
+  {
+    id: "asistente-financiero",
+    title: "Asistente financiero con Claude e IOL",
+    summary:
+      "Bot conectado a Claude y al MCP de IOL para controlar mis finanzas desde el celular: consulta las carteras de inversión, lleva gastos, deudas y resúmenes de tarjeta. Los números los calcula código con tests, nunca el modelo, y cualquier operación en IOL pide mi confirmación antes de ejecutarse.",
+    stack: ["Claude", "MCP", "Node.js", "TypeScript", "Telegram"],
   },
   {
     id: "monedita",

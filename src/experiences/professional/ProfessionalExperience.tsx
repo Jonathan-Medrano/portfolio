@@ -14,9 +14,15 @@ import { profile } from "@/data";
 export default function ProfessionalExperience() {
   return (
     <div className="min-h-dvh bg-background text-foreground">
+      <a
+        href="#contenido"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-md focus:bg-foreground focus:px-4 focus:py-2 focus:text-sm focus:text-background"
+      >
+        Saltar al contenido
+      </a>
       <ProNavbar />
 
-      <main className="mx-auto max-w-5xl px-6">
+      <main id="contenido" className="mx-auto max-w-5xl px-6">
         <Hero />
         <ExperienceSection />
         <ProjectsSection />

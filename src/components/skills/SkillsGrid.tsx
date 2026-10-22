@@ -1,9 +1,6 @@
 import { motion, type Variants } from "motion/react";
 import { skills } from "@/data";
-import { cn } from "@/lib/utils";
 import { skillIcons } from "./skillIcons";
-
-type Variant = "pro" | "mc";
 
 // Staggered reveal: the container orchestrates, each card animates in turn.
 const container: Variants = {
@@ -16,9 +13,7 @@ const card: Variants = {
   show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.3 } },
 };
 
-export default function SkillsGrid({ variant = "pro" }: { variant?: Variant }) {
-  const isMc = variant === "mc";
-
+export default function SkillsGrid() {
   return (
     <motion.ul
       variants={container}
@@ -35,13 +30,8 @@ export default function SkillsGrid({ variant = "pro" }: { variant?: Variant }) {
           <motion.li
             key={skill.name}
             variants={card}
-            whileHover={isMc ? { y: -2 } : { y: -4 }}
-            className={cn(
-              "flex flex-col items-center gap-2 p-4 text-center transition-colors",
-              isMc
-                ? "mc-slot"
-                : "rounded-lg border border-border bg-card hover:border-foreground/30",
-            )}
+            whileHover={{ y: -4 }}
+            className="flex flex-col items-center gap-2 rounded-lg border border-border bg-card p-4 text-center transition-colors hover:border-foreground/30"
           >
             {Icon ? (
               <Icon
@@ -54,14 +44,7 @@ export default function SkillsGrid({ variant = "pro" }: { variant?: Variant }) {
                 {skill.name.charAt(0)}
               </span>
             )}
-            <span
-              className={cn(
-                "text-sm font-medium",
-                isMc
-                  ? "text-[#f5f5f5] [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]"
-                  : "text-foreground",
-              )}
-            >
+            <span className="text-sm font-medium text-foreground">
               {skill.name}
             </span>
           </motion.li>

@@ -36,7 +36,10 @@ export default function Section({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
+        // "some", not a fraction: a section taller than ~6x the viewport (Proyectos
+        // on a phone) can never show 15% of itself at once, and would stay
+        // invisible forever.
+        viewport={{ once: true, amount: "some" }}
         transition={{ duration: 0.5 }}
         className="flex flex-col gap-10"
       >

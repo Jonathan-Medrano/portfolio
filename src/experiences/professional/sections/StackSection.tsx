@@ -14,7 +14,7 @@ export default function StackSection() {
           <h3 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
             Tecnologías con las que trabajé
           </h3>
-          <SkillsGrid variant="pro" />
+          <SkillsGrid />
         </div>
 
         <div className="flex flex-col gap-4">

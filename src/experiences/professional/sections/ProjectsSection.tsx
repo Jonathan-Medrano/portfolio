@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Section from "../Section";
 import StatusBadge from "../StatusBadge";
+import ProjectGallery from "../ProjectGallery";
+import ProjectArchitecture from "../ProjectArchitecture";
+import PriceHistoryDemo from "../PriceHistoryDemo";
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const featured = project.featured === true;
@@ -16,7 +19,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: 0.4, delay: Math.min(index, 3) * 0.08 }}
       className={cn(
-        "flex flex-col gap-4 rounded-lg border border-border bg-card p-6 transition-colors hover:border-foreground/25",
+        "flex min-w-0 flex-col gap-4 rounded-lg border border-border bg-card p-6 transition-colors hover:border-foreground/25",
         featured && "sm:col-span-2 sm:p-8",
       )}
     >
@@ -33,6 +36,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       </div>
 
       <p className="text-pretty text-muted-foreground">{project.description}</p>
+
+      {project.gallery && <ProjectGallery groups={project.gallery} />}
+
+      {project.architecture && <ProjectArchitecture />}
+
+      {project.demo === "price-history" && <PriceHistoryDemo />}
 
       {/* The decisions. This is the part that survives an interview. */}
       <ul

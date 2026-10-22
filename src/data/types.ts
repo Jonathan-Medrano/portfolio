@@ -20,7 +20,7 @@ export interface Skill {
   icon: string;
 }
 
-export type ProjectStatus = "live" | "beta" | "wip" | "archived";
+export type ProjectStatus = "live" | "beta" | "wip" | "archived" | "showcase";
 
 /** Who the project was built for — it changes how a reader weighs it. */
 export type ProjectKind = "product" | "tool";
@@ -28,6 +28,26 @@ export type ProjectKind = "product" | "tool";
 export interface ProjectLink {
   label: string;
   url: string;
+}
+
+/** One screenshot. `caption` says what the reader is looking at and why it matters. */
+export interface ProjectShot {
+  /** Path under /public. */
+  src: string;
+  alt: string;
+  caption: string;
+}
+
+/**
+ * A set of screenshots sharing one idea ("the buyer's flow", "the owner's
+ * console"). `phone` groups render side by side in portrait; `screen` groups
+ * get a large viewer with thumbnails.
+ */
+export interface ProjectGalleryGroup {
+  id: string;
+  label: string;
+  layout: "screen" | "phone";
+  shots: ProjectShot[];
 }
 
 export interface Project {
@@ -51,6 +71,12 @@ export interface Project {
   featured?: boolean;
   /** Path under /public or imported asset url. */
   image?: string;
+  /** Screenshots, grouped. Only for the featured project: proof you can see. */
+  gallery?: ProjectGalleryGroup[];
+  /** Shows the "how it works inside" diagram. Only where there is a flow worth tracing. */
+  architecture?: boolean;
+  /** Interactive explainer for the one rule that carries the project. */
+  demo?: "price-history";
 }
 
 /**
@@ -87,6 +113,24 @@ export interface Experience {
   highlights: string[];
   stack: string[];
   current?: boolean;
+  /** Numbers and flows behind the bullets, drawn as visuals. Everything here must also be stated in `highlights`. */
+  visuals?: ExperienceVisuals;
+}
+
+export interface ExperienceVisuals {
+  migration: {
+    from: string;
+    to: string;
+    areas: string[];
+    note: string;
+  };
+  /** How AI is used day to day. Said plainly: it speeds the work up, it doesn't replace judgement. */
+  ai: { title: string; items: string[]; note: string };
+  /** Systems built to make the work better and faster, with examples. Said plainly; no screenshots of internal tools. */
+  systems: {
+    title: string;
+    examples: Array<{ name: string; what: string; steps?: string[] }>;
+  };
 }
 
 export type SocialKind = "github" | "linkedin" | "email" | "twitter" | "website";
