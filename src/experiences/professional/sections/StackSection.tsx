@@ -1,4 +1,4 @@
-import { profile, learning } from "@/data";
+import { profile } from "@/data";
 import SkillsGrid from "@/components/skills/SkillsGrid";
 import Section from "../Section";
 
@@ -12,21 +12,11 @@ export default function StackSection() {
 
         <SkillsGrid />
 
-        <div className="flex flex-col gap-4">
-          <h3 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-            Estudiando ahora
-          </h3>
-          <ul className="flex flex-wrap gap-2">
-            {learning.map((topic) => (
-              <li
-                key={topic}
-                className="rounded-md border border-dashed border-border px-3 py-1 text-sm text-muted-foreground"
-              >
-                {topic}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <p className="max-w-3xl border-l-2 border-border pl-4 text-pretty text-muted-foreground">
+          En constante aprendizaje y mejora: cada proyecto y cada problema
+          nuevo es una oportunidad para entender algo mejor y hacerlo mejor la
+          próxima vez.
+        </p>
       </div>
     </Section>
   );

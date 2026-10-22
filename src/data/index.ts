@@ -3,4 +3,3 @@ export { profile } from "./profile";
 export { skills } from "./skills";
 export { projects, lab } from "./projects";
 export { experience } from "./experience";
-export { learning } from "./learning";
