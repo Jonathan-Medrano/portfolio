@@ -17,24 +17,19 @@ export const bajoElPrecioGallery: ProjectGalleryGroup[] = [
     layout: "screen",
     shots: [
       shot(
-        "/projects/bajo-el-precio/historial.webp",
-        "Historial de precios de un celular con su veredicto",
-        "Pegás el link de un producto y ves cómo se movió su precio. Debajo del gráfico, un veredicto compara el precio de hoy contra el promedio y el mínimo de toda la serie acumulada.",
-      ),
-      shot(
         "/projects/bajo-el-precio/explorador.webp",
-        "Explorador de productos con los que más bajaron",
-        "El explorador muestra los productos que más bajaron y los más buscados, con filtros por categoría, condición y rango de precio.",
+        "Explorador de productos con su historial y la baja respecto del máximo",
+        "El explorador muestra cada producto con su historial en miniatura y cuánto bajó respecto de su máximo, con filtros por categoría, precio y baja mínima. Capturas con datos de muestra.",
       ),
       shot(
-        "/projects/bajo-el-precio/veredicto.webp",
-        "Detalle de un producto que está en su precio más bajo registrado",
-        "El detalle dice si el precio de hoy es el más bajo que se registró y deja pedir un aviso si baja. Es la misma regla que dispara las alertas de Telegram.",
+        "/projects/bajo-el-precio/falsa-oferta.webp",
+        "Detalle de un producto cuya oferta no es el mejor precio",
+        "Parece una oferta fuerte, pero el precio ya había estado más bajo semanas atrás. El veredicto lo avisa y recomienda no confiarse del descuento: es la regla central del proyecto.",
       ),
       shot(
-        "/projects/bajo-el-precio/producto.webp",
-        "Página pública de un producto con su historial",
-        "Cada producto tiene su propia página pública con el historial, pensada para que los buscadores la encuentren.",
+        "/projects/bajo-el-precio/baja-real.webp",
+        "Detalle de un producto en su precio más bajo registrado",
+        "Cuando el precio de hoy es el más bajo de toda la serie acumulada, el veredicto lo confirma y deja pedir un aviso si vuelve a bajar.",
       ),
     ],
   },
@@ -49,7 +44,7 @@ export const mecanicosGallery: ProjectGalleryGroup[] = [
       shot(
         "/projects/mecanicos/landing.webp",
         "Página principal de MecánicOS",
-        "Es el sitio público de MecánicOS (la landing todavía muestra el nombre anterior, TallerOS). Presenta las órdenes de trabajo digitales, el bot de WhatsApp para mecánicos y los avisos automáticos a los clientes.",
+        "Es el sitio público de MecánicOS. Presenta las órdenes de trabajo digitales, el bot de WhatsApp para mecánicos y los avisos automáticos a los clientes.",
       ),
       shot(
         "/projects/mecanicos/funciones.webp",
@@ -60,6 +55,23 @@ export const mecanicosGallery: ProjectGalleryGroup[] = [
         "/projects/mecanicos/talleres.webp",
         "Ventajas pensadas para talleres reales",
         "Pensado para talleres de barrio: corre en el navegador, tiene usuarios con permisos por rol, historial de cada vehículo, presupuesto en PDF y funciona desde el celular.",
+      ),
+    ],
+  },
+  {
+    id: "movil",
+    label: "En el celular",
+    layout: "phone",
+    shots: [
+      shot(
+        "/projects/mecanicos/movil-landing.webp",
+        "Página principal de MecánicOS en el celular",
+        "El sitio se adapta al celular, que es desde donde trabaja un taller.",
+      ),
+      shot(
+        "/projects/mecanicos/movil-funciones.webp",
+        "Funciones de MecánicOS en el celular",
+        "Las mismas funciones, pensadas para usarse desde el teléfono.",
       ),
     ],
   },
