@@ -151,6 +151,27 @@ export const lab: LabProject[] = [
     stack: ["Claude", "MCP", "Node.js", "TypeScript", "Telegram"],
   },
   {
+    id: "juegos",
+    title: "Juegos propios y una fábrica de juegos",
+    summary:
+      "Desarrollé varios juegos web y mobile sobre un kit propio con plantillas reutilizables (defensa de torre, clicker idle, runner, minijuegos). Holdout, un tower defense 3D, llegó a prueba interna en Google Play; también hice Heroes Voxel (un clicker), Cazador Runner y Golpazo (un idle de boxeo). Lo que más me dejó fue pensar el kit una vez para reusarlo en cada juego.",
+    stack: ["TypeScript", "Three.js", "HTML5", "Capacitor"],
+  },
+  {
+    id: "plugins-minecraft",
+    title: "Plugins de Minecraft para servidores de retos",
+    summary:
+      "Varios plugins para Paper pensados para videos del estilo «Me paso Minecraft pero…»: drops únicos, cofres al minar, magia, reglas que cambian cada pocos minutos, minijuegos y un mapa de reinos enfrentados. Son experimentos, algunos poco prácticos, pero buenos para aprender modding y diseño de reglas de juego; cada uno tiene su documento de diseño.",
+    stack: ["Java", "Gradle", "Paper"],
+  },
+  {
+    id: "clips-minecraft",
+    title: "Sistema de clips para videos de Minecraft",
+    summary:
+      "Automatización en desarrollo: vigila las grabaciones de OBS, detecta momentos destacados y transcribe con Whisper para proponer recortes, de modo que un video largo y sus shorts salgan sin mirar horas de grabación.",
+    stack: ["Node.js", "Whisper", "OBS"],
+  },
+  {
     id: "monedita",
     title: "Monedita",
     summary:
