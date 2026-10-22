@@ -1,10 +1,11 @@
 <!doctype html>
 <!--
   Source for public/og-image.png — the preview card that shows up when the
-  portfolio link is pasted into LinkedIn, WhatsApp or Slack.
+  portfolio link is pasted into LinkedIn, WhatsApp, Slack or Discord.
 
   Rendered to PNG by scripts/gen-og.mjs at exactly 1200x630 (the size every
   platform crops to). Edit this file, re-run `npm run og`, commit the PNG.
+  Same ink + amber as the favicon; three real project screens, all inside the frame.
 -->
 <html lang="es">
   <head>
@@ -12,100 +13,40 @@
     <style>
       @font-face {
         font-family: "Playfair";
-        src: url("../node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2")
-          format("woff2");
+        src: url("../node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2") format("woff2");
         font-weight: 400 900;
       }
       @font-face {
         font-family: "NotoS";
-        src: url("../node_modules/@fontsource-variable/noto-sans/files/noto-sans-latin-wght-normal.woff2")
-          format("woff2");
+        src: url("../node_modules/@fontsource-variable/noto-sans/files/noto-sans-latin-wght-normal.woff2") format("woff2");
         font-weight: 100 900;
       }
-
       * { margin: 0; padding: 0; box-sizing: border-box; }
-
       body {
-        width: 1200px;
-        height: 630px;
-        position: relative;
-        overflow: hidden;
-        background: #fafaf9;
-        color: #1c1917;
-        font-family: "NotoS", system-ui, sans-serif;
+        width: 1200px; height: 630px; position: relative; overflow: hidden;
+        background: radial-gradient(900px 500px at 85% 20%, #2b2118 0%, #1c1917 60%);
+        color: #fafaf9; font-family: "NotoS", system-ui, sans-serif;
       }
       .text {
-        position: absolute;
-        left: 72px;
-        top: 0;
-        bottom: 0;
-        width: 600px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 22px;
+        position: absolute; left: 64px; top: 0; bottom: 0; width: 520px;
+        display: flex; flex-direction: column; justify-content: center; gap: 22px;
       }
-      .role {
-        font-size: 21px;
-        font-weight: 600;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: #78716c;
+      .role { font-size: 20px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: #f0a52e; }
+      h1 { font-family: "Playfair", Georgia, serif; font-size: 96px; font-weight: 700; line-height: 0.98; letter-spacing: -0.015em; }
+      .tagline { font-size: 26px; line-height: 1.35; color: #d6d3d1; }
+      .stack { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+      .chip { border: 2px solid #44403c; border-radius: 8px; padding: 5px 13px; font-size: 18px; color: #e7e5e4; }
+      .card {
+        position: absolute; width: 400px; border-radius: 12px; overflow: hidden; background: #fff;
+        border: 2px solid rgba(255,255,255,0.14); box-shadow: 0 30px 60px rgba(0,0,0,0.55);
       }
-      h1 {
-        font-family: "Playfair", Georgia, serif;
-        font-size: 92px;
-        font-weight: 700;
-        line-height: 1;
-        letter-spacing: -0.015em;
-      }
-      .tagline {
-        font-size: 28px;
-        line-height: 1.35;
-        color: #57534e;
-      }
-      .stack { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
-      .chip {
-        border: 2px solid #d6d3d1;
-        border-radius: 8px;
-        padding: 6px 13px;
-        font-size: 19px;
-        color: #44403c;
-      }
-      /* Real screen of the featured project: proof, not decoration. */
-      .shot {
-        position: absolute;
-        right: -90px;
-        top: 90px;
-        width: 600px;
-        border-radius: 14px;
-        overflow: hidden;
-        border: 2px solid #d6d3d1;
-        background: #fff;
-        box-shadow: 0 30px 60px rgba(28, 25, 23, 0.22);
-      }
-      .bar { height: 30px; background: #f0efed; display: flex; align-items: center; gap: 7px; padding: 0 14px; }
-      .bar i { width: 11px; height: 11px; border-radius: 50%; background: #cfcdc9; }
-      .shot img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
-      .phone {
-        position: absolute;
-        right: 400px;
-        bottom: 86px;
-        width: 130px;
-        border-radius: 22px;
-        border: 5px solid #1c1917;
-        box-shadow: 0 24px 50px rgba(28, 25, 23, 0.35);
-        overflow: hidden;
-        background: #000;
-      }
-      .phone img { display: block; width: 100%; aspect-ratio: 390 / 664; object-fit: cover; object-position: top; }
-      .badge {
-        position: absolute;
-        right: 72px;
-        bottom: 32px;
-        font-size: 18px;
-        color: #78716c;
-        letter-spacing: 0.04em;
+      .card img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+      .c1 { right: 60px; top: 30px; transform: rotate(3deg); z-index: 1; }
+      .c2 { right: 190px; top: 195px; transform: rotate(-2deg); z-index: 2; }
+      .c3 { right: 50px; top: 355px; transform: rotate(2deg); z-index: 3; }
+      .label {
+        position: absolute; left: 12px; top: 12px; background: #1c1917; color: #fafaf9;
+        font-size: 15px; font-weight: 600; padding: 4px 10px; border-radius: 6px;
       }
     </style>
   </head>
@@ -113,25 +54,13 @@
     <div class="text">
       <p class="role">Desarrollador Full Stack</p>
       <h1>Jonathan Medrano</h1>
-      <p class="tagline">
-        Productos web de punta a punta: del esquema de la base al pixel del front.
-      </p>
+      <p class="tagline">SaaS, bots y automatizaciones con IA, de la base de datos a la pantalla.</p>
       <div class="stack">
-        <span class="chip">React</span>
-        <span class="chip">TypeScript</span>
-        <span class="chip">Node.js</span>
-        <span class="chip">.NET</span>
-        <span class="chip">PostgreSQL</span>
+        <span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Node.js</span><span class="chip">C# / .NET</span>
       </div>
     </div>
-
-    <div class="shot">
-      <div class="bar"><i></i><i></i><i></i></div>
-      <img src="../public/projects/ticketera/panel-dashboard.webp" alt="" />
-    </div>
-    <div class="phone">
-      <img src="../public/projects/ticketera/movil-qr.webp" alt="" />
-    </div>
-    <p class="badge">Ticketera · proyecto de portfolio</p>
+    <div class="card c1"><img src="../public/projects/ticketera/sitio-premium.webp" alt="" /><span class="label">Ticketera</span></div>
+    <div class="card c2"><img src="../public/projects/mecanicos/landing.webp" alt="" /><span class="label">MecánicOS</span></div>
+    <div class="card c3"><img src="../public/projects/bajo-el-precio/explorador.webp" alt="" /><span class="label">Bajó el Precio</span></div>
   </body>
 </html>
