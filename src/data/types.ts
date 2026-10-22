@@ -8,7 +8,13 @@
 // `Project` is the handful that carry the argument; `LabProject` is the rest,
 // framed as finished experiments rather than abandoned products.
 
-export type SkillCategory = "language" | "frontend" | "backend" | "tooling";
+export type SkillCategory =
+  | "language"
+  | "frontend"
+  | "backend"
+  | "tooling"
+  | "ai"
+  | "integration";
 
 export interface Skill {
   name: string;

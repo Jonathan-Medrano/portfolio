@@ -21,7 +21,25 @@ import {
   SiReactrouter,
   SiFramer,
   SiDocker,
+  SiNextdotjs,
+  SiNestjs,
+  SiPrisma,
+  SiRedux,
+  SiMui,
+  SiThreedotjs,
+  SiGradle,
+  SiVitest,
+  SiTurborepo,
+  SiCapacitor,
+  SiFfmpeg,
+  SiMariadb,
+  SiClaude,
+  SiWhatsapp,
+  SiTelegram,
+  SiMercadopago,
 } from "react-icons/si";
+import { FaJava } from "react-icons/fa";
+import { VscAzureDevops } from "react-icons/vsc";
 
 interface IconEntry {
   Icon: IconType;
@@ -53,4 +71,22 @@ export const skillIcons: Record<string, IconEntry> = {
   reactrouter: { Icon: SiReactrouter, color: "#CA4245" },
   framer: { Icon: SiFramer, color: "#0055FF" },
   docker: { Icon: SiDocker, color: "#2496ED" },
+  java: { Icon: FaJava, color: "#ED8B00" },
+  nextdotjs: { Icon: SiNextdotjs, color: "currentColor" },
+  nestjs: { Icon: SiNestjs, color: "#E0234E" },
+  prisma: { Icon: SiPrisma, color: "currentColor" },
+  redux: { Icon: SiRedux, color: "#764ABC" },
+  mui: { Icon: SiMui, color: "#007FFF" },
+  threedotjs: { Icon: SiThreedotjs, color: "currentColor" },
+  gradle: { Icon: SiGradle, color: "currentColor" },
+  vitest: { Icon: SiVitest, color: "#6E9F18" },
+  turborepo: { Icon: SiTurborepo, color: "#EF4444" },
+  capacitor: { Icon: SiCapacitor, color: "#119EFF" },
+  ffmpeg: { Icon: SiFfmpeg, color: "#007808" },
+  mariadb: { Icon: SiMariadb, color: "#4FA3C0" },
+  claude: { Icon: SiClaude, color: "#D97757" },
+  whatsapp: { Icon: SiWhatsapp, color: "#25D366" },
+  telegram: { Icon: SiTelegram, color: "#26A5E4" },
+  mercadopago: { Icon: SiMercadopago, color: "#00B1EA" },
+  azuredevops: { Icon: VscAzureDevops, color: "#0078D7" },
 };
