@@ -95,6 +95,16 @@ export const mecanicosGallery: ProjectGalleryGroup[] = [
         "Funciones de MecánicOS en el celular",
         "Las mismas funciones, pensadas para usarse desde el teléfono.",
       ),
+      shot(
+        "/projects/mecanicos/movil-ordenes.webp",
+        "Lista de órdenes de trabajo en el celular",
+        "El panel también se usa desde el celular, con el estado de cada orden a mano. Los datos son de muestra.",
+      ),
+      shot(
+        "/projects/mecanicos/movil-inventario.webp",
+        "Inventario de repuestos en el celular",
+        "Stock de repuestos con aviso de stock bajo y ajuste rápido. Los datos son de muestra.",
+      ),
     ],
   },
 ];
