@@ -159,9 +159,9 @@ export const lab: LabProject[] = [
   },
   {
     id: "plugins-minecraft",
-    title: "Plugins de Minecraft para servidores de retos",
+    title: "Plugins de Minecraft para jugar con amigos",
     summary:
-      "Varios plugins para Paper pensados para videos del estilo «Me paso Minecraft pero…»: drops únicos, cofres al minar, magia, reglas que cambian cada pocos minutos, minijuegos y un mapa de reinos enfrentados. Son experimentos, algunos poco prácticos, pero buenos para aprender modding y diseño de reglas de juego; cada uno tiene su documento de diseño.",
+      "Varios plugins para Paper que hice para jugar con amigos, y nada más que eso: retos del estilo «Me paso Minecraft pero…» con drops únicos, cofres al salir minando, magia, reglas que cambian cada pocos minutos, minijuegos y un mapa de reinos enfrentados. Son experimentos para aprender modding y diseño de reglas de juego, cada uno con su documento de diseño.",
     stack: ["Java", "Gradle", "Paper"],
   },
   {
