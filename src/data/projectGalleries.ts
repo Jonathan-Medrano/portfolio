@@ -59,6 +59,28 @@ export const mecanicosGallery: ProjectGalleryGroup[] = [
     ],
   },
   {
+    id: "panel",
+    label: "El panel (datos de muestra)",
+    layout: "screen",
+    shots: [
+      shot(
+        "/projects/mecanicos/panel-ordenes.webp",
+        "Lista de órdenes de trabajo",
+        "Las órdenes del taller con su estado, el cliente, la patente, el monto y si falta cobrar. Se filtran por estado y el estado se cambia desde la misma fila. Los datos son de muestra.",
+      ),
+      shot(
+        "/projects/mecanicos/panel-calendario.webp",
+        "Calendario semanal del taller",
+        "La semana del taller: qué auto entra cada día, en qué estado está y qué mecánico lo tiene. Los datos son de muestra.",
+      ),
+      shot(
+        "/projects/mecanicos/panel-inventario.webp",
+        "Inventario de repuestos",
+        "Stock de cada repuesto con costo y precio de venta, y una alerta cuando el stock llega al mínimo que definió el taller. Los datos son de muestra.",
+      ),
+    ],
+  },
+  {
     id: "movil",
     label: "En el celular",
     layout: "phone",
