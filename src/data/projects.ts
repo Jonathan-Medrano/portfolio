@@ -147,8 +147,8 @@ export const lab: LabProject[] = [
     id: "asistente-financiero",
     title: "Asistente financiero con Claude e IOL",
     summary:
-      "Bot conectado a Claude y al MCP de IOL para controlar mis finanzas desde el celular: consulta las carteras de inversión, lleva gastos, deudas y resúmenes de tarjeta. Los números los calcula código con tests, nunca el modelo, y cualquier operación en IOL pide mi confirmación antes de ejecutarse.",
-    stack: ["Claude", "MCP", "Node.js", "TypeScript", "Telegram"],
+      "Bot de WhatsApp, armado con Evolution API, conectado a Claude y al MCP de IOL para controlar mis finanzas desde el celular: consulta las carteras de inversión, lleva gastos, deudas y resúmenes de tarjeta. Los números los calcula código con tests, nunca el modelo, y cualquier operación en IOL pide mi confirmación antes de ejecutarse.",
+    stack: ["Claude", "MCP", "Evolution API", "WhatsApp", "Node.js", "TypeScript"],
   },
   {
     id: "juegos",
@@ -165,17 +165,17 @@ export const lab: LabProject[] = [
     stack: ["Java", "Gradle", "Paper"],
   },
   {
-    id: "clips-minecraft",
-    title: "Sistema de clips para videos de Minecraft",
+    id: "editor-clips",
+    title: "Editor automático de clips",
     summary:
-      "Automatización en desarrollo: vigila las grabaciones de OBS, detecta momentos destacados y transcribe con Whisper para proponer recortes, de modo que un video largo y sus shorts salgan sin mirar horas de grabación.",
-    stack: ["Node.js", "Whisper", "OBS"],
+      "Le das una grabación —de cualquier origen, material de terceros— y genera los clips solo: transcribe el audio con Whisper, detecta los momentos destacados y los recorta, sin editar a mano. Está en desarrollo.",
+    stack: ["Node.js", "Whisper"],
   },
   {
     id: "monedita",
     title: "Monedita",
     summary:
-      "Sistema de finanzas personales operado desde WhatsApp: registro de movimientos, carteras y seguimiento de la canasta argentina.",
+      "Sistema de finanzas personales operado desde WhatsApp con Evolution API: registro de movimientos, carteras y seguimiento de la canasta argentina.",
     stack: ["TypeScript", "Node.js", "PostgreSQL", "Turborepo"],
   },
   {
