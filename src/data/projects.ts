@@ -42,7 +42,12 @@ export const projects: Project[] = [
     featured: true,
     gallery: ticketeraGallery,
     architecture: true,
-    links: [],
+    links: [
+      {
+        label: "Ver código",
+        url: "https://github.com/Jonathan-Medrano/ticketera",
+      },
+    ],
   },
   {
     id: "bajo-el-precio",
@@ -107,7 +112,12 @@ export const projects: Project[] = [
     gallery: mecanicosGallery,
     status: "showcase",
     kind: "product",
-    links: [],
+    links: [
+      {
+        label: "Ver código",
+        url: "https://github.com/Jonathan-Medrano/MecanicOS",
+      },
+    ],
   },
 ];
 

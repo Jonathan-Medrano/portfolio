@@ -48,8 +48,8 @@ export const mecanicosGallery: ProjectGalleryGroup[] = [
     shots: [
       shot(
         "/projects/mecanicos/landing.webp",
-        "Página principal del producto, que en el sitio se llama TallerOS",
-        "Es el sitio público del producto (en la web figura como TallerOS). Presenta las órdenes de trabajo digitales, el bot de WhatsApp para mecánicos y los avisos automáticos a los clientes.",
+        "Página principal de MecánicOS",
+        "Es el sitio público de MecánicOS (la landing todavía muestra el nombre anterior, TallerOS). Presenta las órdenes de trabajo digitales, el bot de WhatsApp para mecánicos y los avisos automáticos a los clientes.",
       ),
       shot(
         "/projects/mecanicos/funciones.webp",
