@@ -35,6 +35,7 @@ export const skills: Skill[] = [
 
   { name: "Git", category: "tooling", icon: "git" },
   { name: "Azure DevOps", category: "tooling", icon: "azuredevops" },
+  { name: "Docker", category: "tooling", icon: "docker" },
   { name: "Vite", category: "tooling", icon: "vite" },
   { name: "Vitest", category: "tooling", icon: "vitest" },
   { name: "Turborepo", category: "tooling", icon: "turborepo" },
