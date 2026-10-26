@@ -31,7 +31,7 @@ export default function SkillsGrid() {
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-col gap-4">
-        <h4 className="font-heading text-lg font-semibold">Stack principal</h4>
+        <h3 className="font-heading text-lg font-semibold">Stack principal</h3>
         <p className="-mt-2 max-w-xl text-sm text-pretty text-muted-foreground">
           Lo que uso todos los días, en el trabajo y en mis proyectos.
         </p>
@@ -74,9 +74,9 @@ export default function SkillsGrid() {
 
       <div className="flex flex-col gap-5 border-t border-border pt-8">
         <div className="flex flex-col gap-1">
-          <h4 className="font-heading text-lg font-semibold">
+          <h3 className="font-heading text-lg font-semibold">
             También usé, sobre todo en proyectos propios
-          </h4>
+          </h3>
           <p className="max-w-xl text-sm text-pretty text-muted-foreground">
             Herramientas que elegí para cada proyecto o experimento, no mi
             stack del día a día.
