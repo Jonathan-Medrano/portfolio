@@ -69,6 +69,16 @@ export const mecanicosGallery: ProjectGalleryGroup[] = [
         "Las órdenes del taller con su estado, el cliente, la patente, el monto y si falta cobrar. Se filtran por estado y el estado se cambia desde la misma fila. Los datos son de muestra.",
       ),
       shot(
+        "/projects/mecanicos/panel-orden.webp",
+        "Detalle de una orden de trabajo",
+        "Cliente, vehículo y mecánico a cargo, línea de tiempo y notas del mecánico, con acciones para compartir el link de seguimiento y generar el presupuesto en PDF. Los datos son de muestra.",
+      ),
+      shot(
+        "/projects/mecanicos/panel-orden-presupuesto.webp",
+        "Presupuesto y cobros de una orden",
+        "Mano de obra y repuestos con su subtotal, y los cobros registrados contra la orden. Los datos son de muestra.",
+      ),
+      shot(
         "/projects/mecanicos/panel-calendario.webp",
         "Calendario semanal del taller",
         "La semana del taller: qué auto entra cada día, en qué estado está y qué mecánico lo tiene. Los datos son de muestra.",
@@ -99,6 +109,11 @@ export const mecanicosGallery: ProjectGalleryGroup[] = [
         "/projects/mecanicos/movil-ordenes.webp",
         "Lista de órdenes de trabajo en el celular",
         "El panel también se usa desde el celular, con el estado de cada orden a mano. Los datos son de muestra.",
+      ),
+      shot(
+        "/projects/mecanicos/movil-calendario.webp",
+        "Agenda del taller en el celular",
+        "En el celular la semana se apila día por día, con los turnos y las órdenes agendadas. Los datos son de muestra.",
       ),
       shot(
         "/projects/mecanicos/movil-inventario.webp",
